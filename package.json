@@ -22,6 +22,8 @@
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
   },
   "dependencies": {
+    "@commitlint/config-conventional": "^8.3.4",
+    "@commitlint/core": "^8.3.5",
     "colors": "^1.4.0",
     "probot": "^9.5.3"
   },
