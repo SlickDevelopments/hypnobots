@@ -4,7 +4,9 @@ The following <TYPE> do not follow Poool's rules:
 <PLACEHOLDER>
 
 <details>
+
 <DETAILS>
+
 </details>
 
 --------
