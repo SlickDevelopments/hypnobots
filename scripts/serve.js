@@ -18,6 +18,6 @@ for(const arg of argv._) {
   const config = dotenv.parse(fs.readFileSync(process.cwd() + `/bots/${arg}/.env`));
   for (const property in config) {
     process.env[property] = config[property];
-   }
+  }
   Probot.run(app);
 }

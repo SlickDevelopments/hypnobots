@@ -1,5 +1,12 @@
 {
   "action": "opened",
+  "pull_request": {
+    "title": "📦 oui: oui",
+    "id": 1,
+    "user": {
+      "login": "hiimbex"
+    }
+  },
   "issue": {
     "number": 1,
     "user": {
