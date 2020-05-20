@@ -1,5 +1,5 @@
 const template = `
-The following <TYPE> do not follow Poool's rules:
+The following <TYPE> does not follow Poool's rules:
 
 <PLACEHOLDER>
 
@@ -14,7 +14,7 @@ The following <TYPE> do not follow Poool's rules:
 Happy coding!
 `;
 
-function format (id, type, errors, warnings) {
+module.exports = (id, type, errors, warnings) => {
   const message = `* id : ${id}\n`;
   let details = '';
 
@@ -25,6 +25,4 @@ function format (id, type, errors, warnings) {
     .replace('<TYPE>', type)
     .replace('<PLACEHOLDER>', message)
     .replace('<DETAILS>', details);
-}
-
-module.exports = format;
+};
