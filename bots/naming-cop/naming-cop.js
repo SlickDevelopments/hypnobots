@@ -1,5 +1,5 @@
 const { lint, load } = require('@commitlint/core');
-const config = require('./probot.config');
+const config = require('./commitlint.config');
 const format = require('./format');
 
 const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
