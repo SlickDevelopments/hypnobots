@@ -104,3 +104,6 @@ dist
 
 # VS code local fils
 .vscode
+
+# Mac os shitty files
+.DS_Store
