@@ -1,8 +1,8 @@
 {
-  "name": "hypnobots",
+  "name": "@poool/hypnobots",
   "version": "1.0.0",
   "private": true,
-  "description": "￼ Repo automation bots for noobs",
+  "description": "🤖￼ Repo automation bots for noobs",
   "author": "Paul Beauduc <paul@poool.fr>",
   "license": "MIT",
   "repository": "https://github.com/Poool/hypnobots.git",
@@ -14,9 +14,8 @@
     "probot-app"
   ],
   "scripts": {
-    "dev": "nodemon",
-    "start": "node ./scripts/serve.js",
-    "serve": "node ./scripts/serve.js",
+    "start": "echo 'Deprecated, use yarn serve instead' && yarn serve",
+    "serve": "nodemon",
     "lint": "./node_modules/.bin/eslint .",
     "test": "jest",
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
@@ -27,6 +26,7 @@
     "@poool/eslint-config": "0.0.1-alpha.3",
     "babel-eslint": "^10.1.0",
     "colors": "^1.4.0",
+    "dotenv": "^8.2.0",
     "eslint": "^6.8.0",
     "eslint-config-standard": "^14.1.1",
     "eslint-plugin-babel": "^5.3.0",
