@@ -1,5 +1,5 @@
 const { lint, load } = require('@commitlint/core');
-const config = require('./rules/config');
+const config = require('./config');
 const format = require('./format');
 const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 
@@ -25,11 +25,13 @@ async function check (context) {
     const branch = context.payload.pull_request.head.ref;
     const types = ['docs', 'feature', 'fix', 'refactor'];
     const errors = [];
+
     if (branch === 'master' || branch === 'develop') {
       return;
     }
     const regex = /^(\w*)\/(\w*)$/;
     const found = branch.match(regex);
+    
     if (found !== null && types.includes(found[1])) {
       return;
     } else if (found !== null && !types.includes(found[1])) {
