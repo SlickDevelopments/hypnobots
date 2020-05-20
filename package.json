@@ -14,8 +14,7 @@
     "probot-app"
   ],
   "scripts": {
-    "start": "echo 'Deprecated, use yarn serve instead' && yarn serve",
-    "serve": "nodemon",
+    "serve": "./node_modules/.bin/nodemon ./scripts/serve.js",
     "lint": "./node_modules/.bin/eslint .",
     "test": "jest",
     "test:watch": "jest --watch --notify --notifyMode=change --coverage"
@@ -53,7 +52,6 @@
     ]
   },
   "nodemonConfig": {
-    "exec": "npm start",
     "watch": [
       ".env",
       "."

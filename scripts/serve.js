@@ -1,23 +1,9 @@
+const path = require('path');
 const { argv } = require('yargs');
-const colors = require('colors/safe');
-const { Probot } = require('probot');
-const dotenv = require('dotenv');
-const fs = require('fs');
 
-if (!argv._.length) {
-  console.error(colors.red(
-    '[poool.serve] No service specified, nothing to run.'
-  ));
-  process.exit(1);
-}
+require('dotenv').config({ path: path.join(path.resolve(argv._[0]), '.env') });
 
-process.on('SIGINT', process.exit);
+process.env.PRIVATE_KEY_PATH = path
+  .resolve(process.env.PRIVATE_KEY_PATH.replace('~', process.env.HOME));
 
-for(const arg of argv._) {
-  const app = require(`../bots/${arg}/index.js`);
-  const config = dotenv.parse(fs.readFileSync(process.cwd() + `/bots/${arg}/.env`));
-  for (const property in config) {
-    process.env[property] = config[property];
-  }
-  Probot.run(app);
-}
+require(path.resolve(argv._[0]));
