@@ -5,6 +5,9 @@
     "id": 1,
     "user": {
       "login": "hiimbex"
+    },
+    "head": {
+      "ref": "illname"
     }
   },
   "issue": {
