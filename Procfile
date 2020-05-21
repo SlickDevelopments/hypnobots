@@ -1,1 +1,1 @@
-web: node ./bots/$BOT_NAME
+web: node ./scripts/run.js
