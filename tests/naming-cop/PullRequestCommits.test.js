@@ -1,51 +1,35 @@
-const nock = require('nock');
-// Requiring our app implementation
-const namingCop = require('../../bots/naming-cop');
-const { Probot } = require('probot');
-// Requiring our fixtures
-const payload = require('../fixtures/pull_request.opened');
-const pullCreatedBody = { body: `
-The following commit do not follow Poool's rules:
-
-* id : 1
-
-<details>
-
- - ✖ type must be one of [chore, docs, feat, fix, refactor, test]
-
-</details>
-
---------
-
-Happy coding!
-` };
-const fs = require('fs');
+const { promises: fsp } = require('fs');
 const path = require('path');
+const nock = require('nock');
+const { createProbot } = require('probot');
+
+const namingCop = require('../../bots/naming-cop');
+const payload = require('../fixtures/pull_request.opened');
+
+const fixturesDir = path.resolve('./tests/fixtures');
 
 describe('Naming Cop', () => {
-  let probot;
-  let mockCert;
+  let probot, cert, pullCreatedBody;
 
-  beforeAll((done) => {
-    const file = path.join(__dirname, '../fixtures/mock-cert.pem');
-    fs.readFile(file, (err, cert) => {
-      if (err) return done(err);
-      mockCert = cert;
-      done();
-    });
+  beforeAll(async () => {
+    cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
+    pullCreatedBody = {
+      body: await fsp
+        .readFile(path.join(fixturesDir, 'commit-message.txt'), 'utf-8'),
+    };
     payload.pull_request.title = '📦 chore: change things';
     payload.pull_request.head.ref = 'feature/things';
   });
 
-  beforeEach(() => {
+  beforeEach(async () => {
     nock.disableNetConnect();
-    probot = new Probot({ id: 123, cert: mockCert });
-    // Load our app into probot
+    probot = createProbot({ id: 123, cert });
     probot.load(namingCop);
   });
 
-  test('should create a comment when a pull request is opened' +
-       ' and commits are ill-formed', async () => {
+  test('should create a comment when a pull request is opened ' +
+    'and commits are ill-formed', async () => {
+
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
@@ -56,9 +40,9 @@ describe('Naming Cop', () => {
       .reply(200, {
         data: [{ commit: { message: 'bad: message' }, sha: '1' }],
       });
-    
+
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/pull/1/comments', (body) => {
+      .post('/repos/hiimbex/testing-things/pull/1/comments', body => {
         expect(body).toMatchObject(pullCreatedBody);
         return true;
       })
@@ -66,11 +50,11 @@ describe('Naming Cop', () => {
 
     // Receive a webhook event
     await probot.receive({ event: 'pull_request', payload });
-
   });
-  
-  test('should not create a comment when a pull request is opened' +
-       ' and commits are not ill-formed', async () => {
+
+  test('should not create a comment when a pull request is opened ' +
+    'and commits are not ill-formed', async () => {
+
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
@@ -83,7 +67,7 @@ describe('Naming Cop', () => {
       });
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/pull/1/comments', (body) => {
+      .post('/repos/hiimbex/testing-things/pull/1/comments', body => {
         expect(body).toMatchObject(null);
         return true;
       })
@@ -92,7 +76,7 @@ describe('Naming Cop', () => {
     // Receive a webhook event
     await probot.receive({ event: 'pull_request', payload });
   });
-  
+
   afterEach(() => {
     nock.cleanAll();
     nock.enableNetConnect();
