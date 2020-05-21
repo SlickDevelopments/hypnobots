@@ -1,0 +1,13 @@
+The following title do not follow Poool's rules:
+
+* id : 1
+
+<details>
+
+ - ✖ type must be one of [chore, docs, feat, fix, refactor, test]
+
+</details>
+
+--------
+
+Happy coding!

@@ -1,0 +1,13 @@
+The following branch do not follow Poool's rules:
+
+* id : illname
+
+<details>
+
+ - ✖ branch name do not look like <type>/<name>
+
+</details>
+
+--------
+
+Happy coding!
