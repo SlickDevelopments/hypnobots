@@ -1,0 +1,25 @@
+{
+  "action": "opened",
+  "pull_request": {
+    "title": "📦 oui: oui",
+    "id": 1,
+    "user": {
+      "login": "hiimbex"
+    },
+    "head": {
+      "ref": "illname"
+    }
+  },
+  "issue": {
+    "number": 1,
+    "user": {
+      "login": "hiimbex"
+    }
+  },
+  "repository": {
+    "name": "testing-things",
+    "owner": {
+      "login": "hiimbex"
+    }
+  }
+}

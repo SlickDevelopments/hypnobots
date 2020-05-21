@@ -1,0 +1,23 @@
+language: node_js
+
+node_js:
+  - "10"
+  - "12"
+  - "14"
+
+cache: yarn
+
+stages:
+  - code
+
+jobs:
+  include:
+    - stage: code
+      name: "Eslint check"
+      script: yarn lint
+
+script:
+    - yarn test
+
+after_success:
+  - ./node_modules/.bin/codecov
