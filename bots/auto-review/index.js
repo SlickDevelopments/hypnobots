@@ -28,7 +28,7 @@ module.exports = app => {
       };
       context.github.pulls.createReviewRequest(resquest);
     } else {
-      const comment = context.issue({ body: 'I failed to find a reviewer :(' });
+      const comment = context.issue({ body: 'Failed to find a reviewer ✖' });
       context.github.issues.createComment(comment);
     }
   });
