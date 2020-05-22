@@ -15,10 +15,9 @@ module.exports = app => {
         reviewers.push(c.login);
       }
     }
-    const content = await file(context, pull, 'CODEOWNERS');
-    if (content === null) {
-      return;
-    }
+    
+    await file(context, pull, 'CODEOWNERS', reviewers);
+    
     if (reviewers.length > 0) {
       const resquest = {
         owner: pull.owner,
@@ -27,6 +26,9 @@ module.exports = app => {
         reviewers: reviewers,
       };
       context.github.pulls.createReviewRequest(resquest);
+    } else {
+      const comment = context.issue({ body: 'I failed to find a reviewer :(' });
+      context.github.issues.createComment(comment);
     }
   });
 };
