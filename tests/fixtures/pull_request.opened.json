@@ -8,6 +8,9 @@
     },
     "head": {
       "ref": "illname"
+    },
+    "owner": {
+      "login": "hiimbex"
     }
   },
   "issue": {
