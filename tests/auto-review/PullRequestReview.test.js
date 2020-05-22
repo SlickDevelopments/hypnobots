@@ -140,7 +140,7 @@ describe('Auto Review', () => {
 
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/pull/1/comments', body => {
-        expect(body).toMatchObject({ body: 'I failed to find a reviewer :(' });
+        expect(body).toMatchObject({ body: 'Failed to find a reviewer ✖' });
         return true;
       })
       .reply(200);
