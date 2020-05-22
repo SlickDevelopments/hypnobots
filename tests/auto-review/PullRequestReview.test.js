@@ -9,14 +9,10 @@ const payload = require('../fixtures/pull_request.opened');
 const fixturesDir = path.resolve('./tests/fixtures');
 
 describe('Auto Review', () => {
-  let probot, cert, pullCreatedBody;
+  let probot, cert;
 
   beforeAll(async () => {
     cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
-    pullCreatedBody = {
-      body: await fsp
-        .readFile(path.join(fixturesDir, 'branch-message.txt'), 'utf-8'),
-    };
   });
 
   beforeEach(async () => {

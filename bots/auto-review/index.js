@@ -11,12 +11,13 @@ module.exports = app => {
     const reviewers = [];
 
     for (const c of data) {
-      if (c.permissions.admin === true && pull.owner !== c.login) {
-        reviewers.push(c.login);
+      if (c.permissions.admin === true &&
+          pull.owner.toLowerCase() !== c.login.toLowerCase()) {
+        reviewers.push(c.login.toLowerCase());
       }
     }
     
-    await file(context, pull, 'CODEOWNERS', reviewers);
+    await file(context, pull, 'CODEOWNERS', reviewers, data);
     
     if (reviewers.length > 0) {
       const resquest = {
