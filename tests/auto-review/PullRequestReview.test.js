@@ -50,7 +50,51 @@ describe('Auto Review', () => {
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
         data: {
-          content: 'KiAgICAgICAgICAgICAgICAgQGhpaW1iZXg=',
+          content: 'KiAgICAgICAgICAgICAgICAgQGhpaW1iZXg=', // *      @hiimbex
+        },
+      });
+    
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
+        expect(b).toMatchObject({ reviewers: ['bexhiim'] });
+        return true;
+      })
+      .reply(201);
+
+    // Receive a webhook event
+    await probot.receive({ event: 'pull_request', payload });
+  });
+
+  test('should send a pull request review request 2', async () => {
+
+    // Test that we correctly return a test token
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/collaborators')
+      .reply(200, {
+        data: [
+          {
+            login: 'hiimbex',
+            permissions: {
+              admin: true,
+            },
+          },
+          {
+            login: 'bexhiim',
+            permissions: {
+              admin: false,
+            },
+          }],
+      });
+    
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
+      .reply(200, {
+        data: {
+          content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // *       @bexhiim @user
         },
       });
     
@@ -74,7 +118,21 @@ describe('Auto Review', () => {
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/collaborators')
-      .reply(200, { data: ['hiimbex'] });
+      .reply(200, {
+        data: [
+          {
+            login: 'hiimbex',
+            permissions: {
+              admin: true,
+            },
+          },
+          {
+            login: 'bexhiim',
+            permissions: {
+              admin: false,
+            },
+          }],
+      });
     
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
