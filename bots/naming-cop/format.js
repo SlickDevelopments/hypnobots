@@ -1,28 +1,34 @@
 const template = `
-The following <TYPE> does not follow Poool's rules:
+One or more things does not follow Poool's rules:
 
 <PLACEHOLDER>
-
-<details>
-
-<DETAILS>
-
-</details>
 
 --------
 
 Happy coding!
 `;
 
-module.exports = (id, type, errors, warnings) => {
-  const message = `* id : ${id}\n`;
-  let details = '';
+module.exports = (report) => {
+  let message = '';
 
-  details += errors.map(e => `  - ✖ ${e.message}\n`).join('');
-  details += warnings.map(w => `  - ⚠ ${w.message}\n`).join('');
-
-  return template
-    .replace('<TYPE>', type)
-    .replace('<PLACEHOLDER>', message)
-    .replace('<DETAILS>', details);
+  for (const error of report) {
+    switch (error.type) {
+      case 'branch':
+        message += `\n\`${error.id}\`\n`;
+        break;
+      case 'commit':
+        message += `\n\`${error.message}\` (${error.id})\n`;
+        break;
+      case 'title':
+        message += `\n\`${error.message}\` (#${error.id})\n`;
+        break;
+      default:
+        break;
+    }
+    message += '<details>\n\n';
+    message += error.errors.map(e => `  - ✖ ${e.message}\n`).join('');
+    message += error.warnings.map(w => `  - ⚠ ${w.message}\n`).join('');
+    message += '\n</details>\n';
+  }
+  return template.replace('<PLACEHOLDER>', message);
 };

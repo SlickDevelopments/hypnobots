@@ -4,7 +4,7 @@ const format = require('./format');
 
 const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 
-const checkTitle = async (context, rules) => {
+const checkTitle = async (context, rules, report) => {
   const pull = context.payload.pull_request;
   const clean = pull.title.substring(3);
   const emoji = pull.title.substring(0, 2);
@@ -14,12 +14,16 @@ const checkTitle = async (context, rules) => {
     return;
   }
 
-  const response = format(pull.id, 'title', errors, warnings);
-  const comment = context.issue({ body: response });
-  context.github.issues.createComment(comment);
+  report.push({
+    message: pull.title,
+    type: 'title',
+    id: pull.number,
+    errors: errors,
+    warnings: warnings,
+  });
 };
 
-const checkBranch = async context => {
+const checkBranch = async (context, report) => {
   const branch = context.payload.pull_request.head.ref;
   const types = ['docs', 'feature', 'fix', 'refactor'];
   const errors = [];
@@ -36,15 +40,19 @@ const checkBranch = async context => {
   } else if (found !== null && !types.includes(found[1])) {
     errors.push({ message: 'type should be [docs, feature, fix, refactor]' });
   } else if (found === null) {
-    errors.push({ message: 'branch name do not look like <type>/<name>' });
+    errors.push({ message: 'branch name do not look like type/name' });
   }
 
-  const response = format(branch, 'branch', errors, []);
-  const comment = context.issue({ body: response });
-  context.github.issues.createComment(comment);
+  report.push({
+    message: '',
+    type: 'branch',
+    id: branch,
+    errors: errors,
+    warnings: [],
+  });
 };
 
-const checkCommits = async (context, rules) => {
+const checkCommits = async (context, rules, report) => {
   const pull = context.issue();
   const { data } = await context.github.pulls.listCommits(pull);
 
@@ -55,16 +63,25 @@ const checkCommits = async (context, rules) => {
       continue;
     }
 
-    const response = format(c.sha, 'commit', errors, warnings);
-    const comment = context.issue({ body: response });
-    context.github.issues.createComment(comment);
+    report.push({
+      message: c.commit.message,
+      type: 'commit',
+      id: c.sha,
+      errors: errors,
+      warnings: warnings,
+    });
   }
 };
 
 module.exports = async context => {
   const { rules } = await load(config);
+  const report = [];
 
-  await checkTitle(context, rules);
-  await checkBranch(context);
-  await checkCommits(context, rules);
+  await checkTitle(context, rules, report);
+  await checkBranch(context, report);
+  await checkCommits(context, rules, report);
+
+  const response = format(report);
+  const comment = context.issue({ body: response });
+  context.github.issues.createComment(comment);
 };
