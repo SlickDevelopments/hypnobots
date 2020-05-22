@@ -1,6 +1,6 @@
-The following title do not follow Poool's rules:
+One or more things does not follow Poool's rules:
 
-* id : 1
+`📦 oui: oui` (#1)
 
 <details>
 
