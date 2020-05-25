@@ -1,0 +1,11 @@
+There is no link(s) to reproduce the bug(s).
+It help us helping you by doing so.
+
+You can go to thoses websites and recreate your issue:
+
+- https://jsbin.com
+- https://jsfiddle.net 
+
+-------------
+
+Happy coding !
