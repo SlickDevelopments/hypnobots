@@ -11,14 +11,14 @@ module.exports = app => {
     const reviewers = [];
 
     for (const c of data) {
-      if (c.permissions.admin === true && pull.owner !== c.login) {
-        reviewers.push(c.login);
+      if (c.permissions.admin === true &&
+          pull.owner.toLowerCase() !== c.login.toLowerCase()) {
+        reviewers.push(c.login.toLowerCase());
       }
     }
-    const content = await file(context, pull, 'CODEOWNERS');
-    if (content === null) {
-      return;
-    }
+    
+    await file(context, pull, 'CODEOWNERS', reviewers, data);
+    
     if (reviewers.length > 0) {
       const resquest = {
         owner: pull.owner,
@@ -27,6 +27,9 @@ module.exports = app => {
         reviewers: reviewers,
       };
       context.github.pulls.createReviewRequest(resquest);
+    } else {
+      const comment = context.issue({ body: 'Failed to find a reviewer ✖' });
+      context.github.issues.createComment(comment);
     }
   });
 };

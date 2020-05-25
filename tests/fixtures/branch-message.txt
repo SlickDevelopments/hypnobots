@@ -1,10 +1,10 @@
-The following branch do not follow Poool's rules:
+One or more things does not follow Poool's rules:
 
-* id : illname
+`illname`
 
 <details>
 
- - ✖ branch name do not look like <type>/<name>
+ - ✖ branch name do not look like type/<name
 
 </details>
 

@@ -1,6 +1,6 @@
-The following commit do not follow Poool's rules:
+One or more things does not follow Poool's rules:
 
-* id : 1
+`bad: message` (1)
 
 <details>
 
