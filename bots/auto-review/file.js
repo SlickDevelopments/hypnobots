@@ -10,9 +10,7 @@ module.exports = async (context, pull, path, reviewers, collabs) => {
   try {
     file = await context.github.repos.getContents(args);
   } catch (e) {
-    if (e === 'Not Found') {
-      file = null;
-    }
+    file = null;
   }
 
   if (file !== null) {
