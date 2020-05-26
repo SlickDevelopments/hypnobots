@@ -6,8 +6,8 @@ const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 
 const checkTitle = async (context, rules, report) => {
   const pull = context.payload.pull_request;
-  const clean = pull.title.substring(2);
-  const emoji = pull.title.substring(0, 1);
+  const clean = Array.from(pull.title).slice(2).join('');
+  const emoji = Array.from(pull.title)[0];
   const { valid, errors, warnings } = await lint(clean, rules);
 
   if (
