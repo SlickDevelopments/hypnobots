@@ -86,7 +86,9 @@ module.exports = async context => {
   await checkBranch(context, report);
   await checkCommits(context, rules, report);
 
-  const response = format(report);
-  const comment = context.issue({ body: response });
-  context.github.issues.createComment(comment);
+  if (report.length > 0) {
+    const response = format(report);
+    const comment = context.issue({ body: response });
+    context.github.issues.createComment(comment);
+  }
 };
