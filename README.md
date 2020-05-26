@@ -6,7 +6,9 @@
 
 | Name | Description | Install |
 | ---- | ----------- | ------- |
-| [naming-cop](https://github.com/p3ol/hypnobots/tree/master/bots/naming-cop) | PR checker that ensures that the commit messages follow conventionalcommits.org style, as well as PR & branch titles | [install](https://github.com/apps/naming-cop) |
+| [auto-review](https://github.com/p3ol/hypnobots/tree/master/bots/auto-review) | Checks for any `CODEOWNERS` file or repo admins to automatically request a review when a PR is opened | [install](https://github.com/apps/auto-review)
+| [naming-cop](https://github.com/p3ol/hypnobots/tree/master/bots/naming-cop) | PR checker that ensures the commit messages follow conventionalcommits.org style, as well as PR & branch titles | [install](https://github.com/apps/naming-cop) |
+| [repro-cop](https://github.com/p3ol/hypnobots/tree/master/bots/repro-cop) | Checks for any existing repro link in an issue and reminds user to create one | [install](https://github.com/apps/repro-cop)
 
 ## Contributing
 

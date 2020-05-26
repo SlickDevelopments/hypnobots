@@ -1,10 +1,10 @@
-One or more things does not follow Poool's rules:
+I've found one or more issues in this PR:
 
 `bad: message` (1)
 
 <details>
 
- - ✖ type must be one of [chore, docs, feat, fix, refactor, test]
+ - ❌ type must be one of [chore, docs, feat, fix, refactor, test]
 
 </details>
 

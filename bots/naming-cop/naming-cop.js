@@ -10,7 +10,10 @@ const checkTitle = async (context, rules, report) => {
   const emoji = pull.title.substring(0, 1);
   const { valid, errors, warnings } = await lint(clean, rules);
 
-  if (valid && warnings.length === 0 && emojis.includes(emoji)) {
+  if (
+    (pull.user && pull.user.login === 'renovate') ||
+    (valid && warnings.length === 0 && emojis.includes(emoji))
+  ) {
     return;
   }
 
@@ -18,8 +21,8 @@ const checkTitle = async (context, rules, report) => {
     message: pull.title,
     type: 'title',
     id: pull.number,
-    errors: errors,
-    warnings: warnings,
+    errors,
+    warnings,
   });
 };
 
@@ -28,26 +31,28 @@ const checkBranch = async (context, report) => {
   const types = ['docs', 'feature', 'fix', 'refactor'];
   const errors = [];
 
-  if (branch === 'master' || branch === 'develop') {
+  if (/^master|develop|renovate/.test(branch)) {
     return;
   }
 
   const regex = /^(\w*)\/(\w*)$/;
-  const found = branch.match(regex);
+  const [_, type = ''] = branch.match(regex) || [];
 
-  if (found !== null && types.includes(found[1])) {
+  if (types.includes(type)) {
     return;
-  } else if (found !== null && !types.includes(found[1])) {
-    errors.push({ message: 'type should be [docs, feature, fix, refactor]' });
-  } else if (found === null) {
-    errors.push({ message: 'branch name do not look like type/name' });
   }
+
+  errors.push({
+    message: !type
+      ? 'branch name was not recognized as <type>/<name>'
+      : 'type should be [docs, feature, fix, refactor]',
+  });
 
   report.push({
     message: '',
     type: 'branch',
     id: branch,
-    errors: errors,
+    errors,
     warnings: [],
   });
 };
@@ -67,8 +72,8 @@ const checkCommits = async (context, rules, report) => {
       message: c.commit.message,
       type: 'commit',
       id: c.sha,
-      errors: errors,
-      warnings: warnings,
+      errors,
+      warnings,
     });
   }
 };
@@ -81,7 +86,9 @@ module.exports = async context => {
   await checkBranch(context, report);
   await checkCommits(context, rules, report);
 
-  const response = format(report);
-  const comment = context.issue({ body: response });
-  context.github.issues.createComment(comment);
+  if (report.length > 0) {
+    const response = format(report);
+    const comment = context.issue({ body: response });
+    context.github.issues.createComment(comment);
+  }
 };
