@@ -1,37 +1,35 @@
 const domains = ['jsbin', 'jsfiddle', 'plnkr', 'codepen'];
-const body = `There is no link(s) to reproduce the bug(s).
-It help us helping you by doing so.
+const body = `Hi!
 
-You can go to thoses websites and recreate your issue:
+Thank you for reporting this issue. It appears you did not attach any
+repro link to it.
+The fastest way for us to investigate and resolve this issue is to create a
+repro of the actual bug.
 
-- https://jsbin.com
-- https://jsfiddle.net 
+You may use any of the common JS playgrounds out there:
+
+- [JSBin](https://jsbin.com)
+- [JSFiddle](https://jsfiddle.net)
+- [Plunker](https://plnkr.co)
+- [CodePen](https://codepen.io/)
 
 -------------
 
 Happy coding !
 `;
-/**
- * This is the main entrypoint to your Probot app
- * @param {import('probot').Application} app
- */
+
 module.exports = app => {
   app.on(['issues.opened', 'issues.reopened'], async context => {
     const message = context.payload.issue.body;
     const regex = /(?:https?:\/\/)(?:www.)?(\w*).\w*/g;
     const links = message.matchAll(regex);
-    let count = 0;
-    let length = 0;
 
-    for (const link of links) {
-      if (!domains.includes(link[1])) {
-        ++count;
-      }
-      ++length;
-    }
-    
-    if (length !== 0 && count === length) {
-      const issueComment = context.issue({ body: body });
+    const found = Array.from(links)
+      .map(matches => matches[1])
+      .filter(link => domains.includes(link));
+
+    if (!found.length) {
+      const issueComment = context.issue({ body });
       context.github.issues.createComment(issueComment);
     }
   });
