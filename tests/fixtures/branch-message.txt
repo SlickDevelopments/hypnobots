@@ -1,10 +1,10 @@
-One or more things does not follow Poool's rules:
+I've found one or more issues in this PR:
 
-`illname`
+`illname` (branch)
 
 <details>
 
- - ✖ branch name do not look like type/<name
+ - ❌ branch name was not recognized as <type>/<name>
 
 </details>
 

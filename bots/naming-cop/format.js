@@ -1,5 +1,5 @@
 const template = `
-One or more things does not follow Poool's rules:
+I've found one or more issues in this PR:
 
 <PLACEHOLDER>
 
@@ -14,7 +14,7 @@ module.exports = (report) => {
   for (const error of report) {
     switch (error.type) {
       case 'branch':
-        message += `\n\`${error.id}\`\n`;
+        message += `\n\`${error.id}\` (branch)\n`;
         break;
       case 'commit':
         message += `\n\`${error.message}\` (${error.id})\n`;
@@ -25,9 +25,10 @@ module.exports = (report) => {
       default:
         break;
     }
+
     message += '<details>\n\n';
-    message += error.errors.map(e => `  - ✖ ${e.message}\n`).join('');
-    message += error.warnings.map(w => `  - ⚠ ${w.message}\n`).join('');
+    message += error.errors.map(e => `  - ❌ ${e.message}`).join('\n');
+    message += error.warnings.map(w => `  - ⚠️ ${w.message}`).join('\n');
     message += '\n</details>\n';
   }
   return template.replace('<PLACEHOLDER>', message);
