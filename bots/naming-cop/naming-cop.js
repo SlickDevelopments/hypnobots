@@ -10,7 +10,10 @@ const checkTitle = async (context, rules, report) => {
   const emoji = pull.title.substring(0, 1);
   const { valid, errors, warnings } = await lint(clean, rules);
 
-  if (valid && warnings.length === 0 && emojis.includes(emoji)) {
+  if (
+    (pull.user && pull.user.login === 'renovate') ||
+    (valid && warnings.length === 0 && emojis.includes(emoji))
+  ) {
     return;
   }
 
@@ -28,7 +31,7 @@ const checkBranch = async (context, report) => {
   const types = ['docs', 'feature', 'fix', 'refactor'];
   const errors = [];
 
-  if (branch === 'master' || branch === 'develop') {
+  if (/^master|develop|renovate/.test(branch)) {
     return;
   }
 
