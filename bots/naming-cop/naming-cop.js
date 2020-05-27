@@ -11,7 +11,7 @@ const checkTitle = async (context, rules, report) => {
   const { valid, errors, warnings } = await lint(clean, rules);
 
   if (
-    (pull.user && pull.user.login === 'renovate') ||
+    (pull.user && pull.user.login === 'renovate[bot]') ||
     (valid && warnings.length === 0 && emojis.includes(emoji))
   ) {
     return;
