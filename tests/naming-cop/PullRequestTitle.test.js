@@ -8,6 +8,7 @@ const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
+jest.setTimeout(30000);
 describe('Naming Cop', () => {
   let probot, cert, pullCreatedBody;
 
@@ -33,16 +34,25 @@ describe('Naming Cop', () => {
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
 
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/pulls/1/commits')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
     // Test that a comment is posted
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/pull/1/comments', body => {
+      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject(pullCreatedBody);
         return true;
       })
       .reply(200);
 
     // Receive a webhook event
-    await probot.receive({ event: 'pull_request', payload });
+    payload.pull_request.title = '📦 oui: change oui';
+    await probot.receive({ name: 'pull_request', payload });
   });
 
   test('should not create a comment when a pull request is opened ' +
@@ -53,17 +63,24 @@ describe('Naming Cop', () => {
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
 
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/pulls/1/commits')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
     // Test that a comment is posted
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/pull/1/comments', body => {
+      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject(null);
         return true;
       })
       .reply(200);
 
     // Receive a webhook event
-    payload.pull_request.title = '📦 chore: change things';
-    await probot.receive({ event: 'pull_request', payload });
+    await probot.receive({ name: 'pull_request', payload });
   });
 
   afterEach(() => {

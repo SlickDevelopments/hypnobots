@@ -3,21 +3,18 @@ const path = require('path');
 const nock = require('nock');
 const { createProbot } = require('probot');
 
-const namingCop = require('../../bots/repro-cop');
+const namingCop = require('../../bots/auto-update');
 const payload = require('../fixtures/pull_request.opened');
+const commentBody = '⚠️ Cannot update branch : something awful happened';
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
 jest.setTimeout(30000);
-describe('Repro Cop', () => {
-  let probot, cert, issueCreatedBody;
+describe('Auto Update', () => {
+  let probot, cert;
 
   beforeAll(async () => {
     cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
-    issueCreatedBody = {
-      body: await fsp
-        .readFile(path.join(fixturesDir, 'issue-message.txt'), 'utf-8'),
-    };
   });
 
   beforeEach(async () => {
@@ -26,45 +23,46 @@ describe('Repro Cop', () => {
     probot.load(namingCop);
   });
 
-  test('should create a comment when there is no links' +
-    'to reproduce bug(s)', async () => {
+  test('should update head branch', async () => {
 
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
 
-    // Test that a comment is posted
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject(issueCreatedBody);
-        return true;
+      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
+        expect(body).toMatchObject(null);
       })
-      .reply(200);
+      .reply(202);
 
     // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
   });
 
-  test('should not create a comment when there are links' +
-    'to reproduce bug(s)', async () => {
+  test('should create a comment about failing', async () => {
 
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
 
-    // Test that a comment is posted
+    nock('https://api.github.com')
+      .put('/repos/hiimbex/testing-things/pulls/1/update-branch')
+      .replyWithError({
+        message: 'something awful happened',
+        code: 'AWFUL_ERROR',
+      });
+
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject(null);
+        expect(body).toMatchObject({ body: commentBody });
         return true;
       })
       .reply(200);
-
+    
     // Receive a webhook event
-    payload.issue.body = 'https://jsbin.com';
-    await probot.receive({ name: 'issues', payload });
+    await probot.receive({ name: 'pull_request', payload });
   });
 
   afterEach(() => {

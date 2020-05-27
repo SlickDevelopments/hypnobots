@@ -8,6 +8,7 @@ const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
+jest.setTimeout(30000);
 describe('Naming Cop', () => {
   let probot, cert, pullCreatedBody;
 
@@ -37,19 +38,21 @@ describe('Naming Cop', () => {
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
-      .reply(200, {
-        data: [{ commit: { message: 'bad: message' }, sha: '1' }],
-      });
+      .reply(200, [{ commit: { message: 'bad: message' }, sha: '1' }]);
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/pull/1/comments', body => {
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject(pullCreatedBody);
         return true;
       })
       .reply(200);
 
     // Receive a webhook event
-    await probot.receive({ event: 'pull_request', payload });
+    await probot.receive({ name: 'pull_request', payload });
   });
 
   test('should not create a comment when a pull request is opened ' +
@@ -62,19 +65,21 @@ describe('Naming Cop', () => {
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
-      .reply(200, {
-        data: [{ commit: { message: 'test: message' }, sha: '1' }],
-      });
+      .reply(200, [{ commit: { message: 'test: message' }, sha: '1' }]);
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/pull/1/comments', body => {
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject(null);
         return true;
       })
       .reply(200);
 
     // Receive a webhook event
-    await probot.receive({ event: 'pull_request', payload });
+    await probot.receive({ name: 'pull_request', payload });
   });
 
   afterEach(() => {
