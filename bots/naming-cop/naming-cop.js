@@ -89,7 +89,7 @@ module.exports = async context => {
   if (report.length > 0) {
     let response = format(report);
     const { data } = await context.github.issues.listComments(context.issue());
-    
+
     for (const comment of data.reverse()) {
       if (comment.user.login === 'naming-cop[bot]') {
         if (response === comment.body) {
@@ -98,7 +98,7 @@ module.exports = async context => {
         break;
       }
     }
-    
+
     if (response !== null) {
       const comment = context.issue({ body: response });
       context.github.issues.createComment(comment);
