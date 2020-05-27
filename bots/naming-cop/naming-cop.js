@@ -91,7 +91,7 @@ module.exports = async context => {
     const { data } = await context.github.issues.listComments(context.issue());
     
     for (const comment of data.reverse()) {
-      if (comment.user.login === 'poool-dev-app-paul[bot]') {
+      if (comment.user.login === 'naming-cop[bot]') {
         if (response === comment.body) {
           response = null;
         }
