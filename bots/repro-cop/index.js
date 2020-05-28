@@ -1,3 +1,5 @@
+const matchAll = require('../../utils/matchAll');
+
 const domains = ['jsbin', 'jsfiddle', 'plnkr', 'codepen'];
 const body = `Hi!
 
@@ -22,7 +24,7 @@ module.exports = app => {
   app.on(['issues.opened', 'issues.reopened'], async context => {
     const message = context.payload.issue.body;
     const regex = /(?:https?:\/\/)(?:www.)?(\w*).\w*/g;
-    const links = message.matchAll(regex);
+    const links = matchAll(message, regex);
 
     const found = Array.from(links)
       .map(matches => matches[1])
