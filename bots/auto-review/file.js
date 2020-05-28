@@ -1,3 +1,5 @@
+const matchAll = require('../../utils/matchAll');
+
 module.exports = async (context, pull, path, reviewers, collabs) => {
   const regex = /@(\w*)/g;
   const args = {
@@ -16,7 +18,7 @@ module.exports = async (context, pull, path, reviewers, collabs) => {
   if (file !== null) {
     const buff = Buffer.from(file.data.content, 'base64');
     const content = buff.toString('ascii');
-    const users = content.matchAll(regex);
+    const users = matchAll(content, regex);
 
     for (const u of users) {
       const login = u[1].toLowerCase();

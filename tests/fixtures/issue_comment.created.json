@@ -1,0 +1,19 @@
+{
+  "action": "created",
+  "comment": {
+    "body": "@naming-cop stfu"
+  },
+  "issue": {
+    "number": 1,
+    "user": {
+      "login": "hiimbex"
+    },
+    "body": "not a link"
+  },
+  "repository": {
+    "name": "testing-things",
+    "owner": {
+      "login": "hiimbex"
+    }
+  }
+}

@@ -89,12 +89,33 @@ module.exports = async context => {
   if (report.length > 0) {
     let response = format(report);
     const { data } = await context.github.issues.listComments(context.issue());
+    let command = false;
+    let found = false;
 
     for (const comment of data.reverse()) {
-      if (comment.user.login === 'naming-cop[bot]') {
+
+      if (
+        command === false &&
+        comment.body === '@naming-cop stfu'
+      ) {
+        response = null;
+        command = true;
+      } else if (
+        command === false &&
+        found === false &&
+        comment.body === '@naming-cop activate'
+      ) {
+        command = true;
+      }
+
+      if (found === false && comment.user.login === 'naming-cop[bot]') {
         if (response === comment.body) {
           response = null;
         }
+        found = true;
+      }
+
+      if (found === true && command === true) {
         break;
       }
     }

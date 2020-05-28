@@ -1,13 +1,13 @@
 {
   "action": "opened",
   "pull_request": {
-    "title": "📦 oui: oui",
+    "title": "📦 chore: change things",
     "id": 1,
     "user": {
       "login": "hiimbex"
     },
     "head": {
-      "ref": "illname"
+      "ref": "feat/test"
     },
     "owner": {
       "login": "hiimbex"
