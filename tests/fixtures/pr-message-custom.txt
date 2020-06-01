@@ -2,10 +2,10 @@
 I've found one or more issues in this PR:
 
 
-`illname` (branch)
+`📦 chore: change things` (#undefined)
 <details>
 
-  - ❌ branch name was not recognized as <type>/<name>
+  - ❌ type must be one of [feat, fix, test]
 </details>
 
 

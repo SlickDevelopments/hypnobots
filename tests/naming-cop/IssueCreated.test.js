@@ -8,8 +8,7 @@ const payload = require('../fixtures/issue_comment.created');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
-jest.setTimeout(30000);
-describe('Naming Cop', () => {
+describe('Naming Cop Issue', () => {
   let probot, cert;
 
   beforeAll(async () => {
@@ -64,16 +63,15 @@ describe('Naming Cop', () => {
   });
 
   test('should not create a comment when a comment is created', async () => {
-
+    const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
 
-    // Test that a comment is posted
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject(null);
+        fn();
         return true;
       })
       .reply(200);
@@ -81,6 +79,7 @@ describe('Naming Cop', () => {
     // Receive a webhook event
     payload.comment.body = 'no problem here';
     await probot.receive({ name: 'issue_comment', payload });
+    expect(fn).not.toHaveBeenCalled();
   });
 
   afterEach(() => {

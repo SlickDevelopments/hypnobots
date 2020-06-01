@@ -4,19 +4,19 @@ const nock = require('nock');
 const { createProbot } = require('probot');
 
 const namingCop = require('../../bots/naming-cop');
-const payload = require('../fixtures/pull_request.opened');
+let payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
 jest.setTimeout(30000);
-describe('Naming Cop Branch', () => {
+describe('Naming Cop Files', () => {
   let probot, cert, pullCreatedBody;
 
   beforeAll(async () => {
     cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
     pullCreatedBody = {
       body: await fsp
-        .readFile(path.join(fixturesDir, 'branch-message.txt'), 'utf-8'),
+        .readFile(path.join(fixturesDir, 'pr-message-custom.txt'), 'utf-8'),
     };
   });
 
@@ -26,8 +26,7 @@ describe('Naming Cop Branch', () => {
     probot.load(namingCop);
   });
 
-  test('should create a comment when a pull request is opened ' +
-    'and branch name is ill-formed', async () => {
+  test('should change the rules and create a comment', async () => {
 
     // Test that we correctly return a test token
     nock('https://api.github.com')
@@ -36,8 +35,14 @@ describe('Naming Cop Branch', () => {
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.')
-      .reply(200, []);
+      .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }]);
 
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
+      .reply(200, {
+        content: 'ewogICJuYW1pbmdDb3AiOiB7CiAgICAidmFsaWRUeXBlcyI6IFsgImZlYXQiLCAiZml4IiwgInRlc3QiXQogIH0KfQ==',
+      });
+    
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
       .reply(200, []);
@@ -55,14 +60,11 @@ describe('Naming Cop Branch', () => {
       .reply(200);
 
     // Receive a webhook event
-    payload.pull_request.head.ref = 'illname';
     await probot.receive({ name: 'pull_request', payload });
   });
 
-  test('should not create a comment when a pull request is opened ' +
-    'and branch name is not ill-formed', async () => {
+  test('should not change the rules and create a comment', async () => {
     const fn = jest.fn();
-
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
@@ -71,7 +73,7 @@ describe('Naming Cop Branch', () => {
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.')
       .reply(200, []);
-
+    
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
       .reply(200, []);
@@ -81,14 +83,13 @@ describe('Naming Cop Branch', () => {
       .reply(200, []);
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+      .post('/repos/hiimbex/testing-things/issues/1/comments', (body) => {
         fn();
         return true;
       })
       .reply(200);
 
     // Receive a webhook event
-    payload.pull_request.head.ref = 'feature/testing';
     await probot.receive({ name: 'pull_request', payload });
     expect(fn).not.toHaveBeenCalled();
   });

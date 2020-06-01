@@ -9,7 +9,7 @@ const payload = require('../fixtures/pull_request.opened');
 const fixturesDir = path.resolve('./tests/fixtures');
 
 jest.setTimeout(30000);
-describe('Naming Cop', () => {
+describe('Naming Cop Comments', () => {
   let probot, cert, pullCreatedBody;
 
   beforeAll(async () => {
@@ -32,6 +32,10 @@ describe('Naming Cop', () => {
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, []);
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
@@ -62,11 +66,15 @@ describe('Naming Cop', () => {
   });
 
   test('should not create a comment because stfu', async () => {
-
+    const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, []);
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
@@ -83,10 +91,9 @@ describe('Naming Cop', () => {
         },
       ]);
 
-    // Test that a comment is posted
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject(null);
+        fn();
         return true;
       })
       .reply(200);
@@ -94,15 +101,20 @@ describe('Naming Cop', () => {
     // Receive a webhook event
     payload.pull_request.title = '📦 oui: change oui';
     await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
   });
 
   test('should not create a comment because it\'s been' +
-       'posted recently already', async () => {
-
+       ' posted recently already', async () => {
+    const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, []);
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
@@ -112,17 +124,16 @@ describe('Naming Cop', () => {
       .get('/repos/hiimbex/testing-things/issues/1/comments')
       .reply(200, [
         {
-          body: pullCreatedBody,
+          body: pullCreatedBody.body,
           user: {
             login: 'naming-cop[bot]',
           },
         },
       ]);
 
-    // Test that a comment is posted
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject(null);
+        fn();
         return true;
       })
       .reply(200);
@@ -130,6 +141,7 @@ describe('Naming Cop', () => {
     // Receive a webhook event
     payload.pull_request.title = '📦 oui: change oui';
     await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
   });
 
   afterEach(() => {

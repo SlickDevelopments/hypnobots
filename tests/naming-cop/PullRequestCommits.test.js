@@ -9,7 +9,7 @@ const payload = require('../fixtures/pull_request.opened');
 const fixturesDir = path.resolve('./tests/fixtures');
 
 jest.setTimeout(30000);
-describe('Naming Cop', () => {
+describe('Naming Cop Commits', () => {
   let probot, cert, pullCreatedBody;
 
   beforeAll(async () => {
@@ -37,6 +37,10 @@ describe('Naming Cop', () => {
       .reply(200, { token: 'test' });
 
     nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, []);
+
+    nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
       .reply(200, [{ commit: { message: 'bad: message' }, sha: '1' }]);
 
@@ -57,11 +61,15 @@ describe('Naming Cop', () => {
 
   test('should not create a comment when a pull request is opened ' +
     'and commits are not ill-formed', async () => {
-
+    const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, []);
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/pulls/1/commits')
@@ -73,13 +81,14 @@ describe('Naming Cop', () => {
 
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject(null);
+        fn();
         return true;
       })
       .reply(200);
 
     // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
   });
 
   afterEach(() => {

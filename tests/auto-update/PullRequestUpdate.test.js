@@ -24,7 +24,7 @@ describe('Auto Update', () => {
   });
 
   test('should update head branch', async () => {
-
+    const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
@@ -32,12 +32,14 @@ describe('Auto Update', () => {
 
     nock('https://api.github.com')
       .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
-        expect(body).toMatchObject(null);
+        fn();
+        return true;
       })
       .reply(202);
 
     // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
+    expect(fn).toHaveBeenCalled();
   });
 
   test('should create a comment about failing', async () => {
