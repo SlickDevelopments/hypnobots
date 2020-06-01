@@ -4,7 +4,7 @@ const nock = require('nock');
 const { createProbot } = require('probot');
 
 const namingCop = require('../../bots/naming-cop');
-let payload = require('../fixtures/pull_request.opened');
+const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
@@ -27,7 +27,6 @@ describe('Naming Cop Files', () => {
   });
 
   test('should change the rules and create a comment', async () => {
-
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
@@ -40,7 +39,8 @@ describe('Naming Cop Files', () => {
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
       .reply(200, {
-        content: 'ewogICJuYW1pbmdDb3AiOiB7CiAgICAidmFsaWRUeXBlcyI6IFsgImZlYXQiLCAiZml4IiwgInRlc3QiXQogIH0KfQ==',
+        content: 'ewogICJuYW1pbmdDb3AiOiB7CiAgICAidmFsaWRUe' +
+                 'XBlcyI6IFsgImZlYXQiLCAiZml4IiwgInRlc3QiXQogIH0KfQ==',
       });
     
     nock('https://api.github.com')

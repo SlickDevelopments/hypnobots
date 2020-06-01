@@ -88,7 +88,7 @@ const checkFiles = async (context, rules) => {
   try {
     dir = await context.github.repos.getContents(args);
   } catch (e) {
-    dir  = null;
+    dir = null;
   }
 
   for (const f of dir.data) {
