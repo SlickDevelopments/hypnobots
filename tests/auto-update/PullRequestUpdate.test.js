@@ -64,7 +64,7 @@ describe('Auto Update', () => {
       })
       .reply(202);
       
-    await probot.receive({ name: 'pull_request', payload});
+    await probot.receive({ name: 'pull_request', payload });
     expect(fn).not.toHaveBeenCalled();
   });
 
