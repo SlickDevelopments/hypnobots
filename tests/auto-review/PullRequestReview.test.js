@@ -8,7 +8,6 @@ const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
-jest.setTimeout(30000);
 describe('Auto Review', () => {
   let probot, cert;
 

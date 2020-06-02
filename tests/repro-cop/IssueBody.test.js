@@ -8,7 +8,6 @@ const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
-jest.setTimeout(30000);
 describe('Repro Cop', () => {
   let probot, cert, issueCreatedBody;
 
@@ -48,7 +47,7 @@ describe('Repro Cop', () => {
 
   test('should not create a comment when there are links' +
     'to reproduce bug(s)', async () => {
-
+    const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
@@ -57,7 +56,7 @@ describe('Repro Cop', () => {
     // Test that a comment is posted
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject(null);
+        fn();
         return true;
       })
       .reply(200);
@@ -65,6 +64,7 @@ describe('Repro Cop', () => {
     // Receive a webhook event
     payload.issue.body = 'https://jsbin.com';
     await probot.receive({ name: 'issues', payload });
+    expect(fn).not.toHaveBeenCalled();
   });
 
   afterEach(() => {
