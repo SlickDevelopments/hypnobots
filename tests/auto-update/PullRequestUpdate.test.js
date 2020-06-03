@@ -31,6 +31,10 @@ describe('Auto Update', () => {
       .reply(200, { token: 'test' });
 
     nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/compare/hiimbex:master...hiimbex:dev')
+      .reply(200, { behind_by: 2 });
+
+    nock('https://api.github.com')
       .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
         fn();
         return true;
@@ -42,12 +46,38 @@ describe('Auto Update', () => {
     expect(fn).toHaveBeenCalled();
   });
 
+  test('should do nothing', async () => {
+    const fn = jest.fn();
+    // Test that we correctly return a test token
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/compare/hiimbex:master...hiimbex:dev')
+      .reply(200, { behind_by: 0 });
+
+    nock('https://api.github.com')
+      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
+        fn();
+        return true;
+      })
+      .reply(202);
+      
+    await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
+  });
+
   test('should create a comment about failing', async () => {
 
     // Test that we correctly return a test token
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/compare/hiimbex:master...hiimbex:dev')
+      .reply(200, { behind_by: 2 });
 
     nock('https://api.github.com')
       .put('/repos/hiimbex/testing-things/pulls/1/update-branch')

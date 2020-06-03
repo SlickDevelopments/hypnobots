@@ -1,6 +1,7 @@
 const { lint, load } = require('@commitlint/core');
 const config = require('./commitlint.config');
 const format = require('./format');
+const getConfig = require('../../utils/getConfig');
 
 const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 
@@ -79,46 +80,10 @@ const checkCommits = async (context, rules, report) => {
 };
 
 const checkFiles = async (context, rules) => {
-  const pull = context.issue();
-  const args = { owner: pull.owner, repo: pull.repo, path: '.' };
-  const files = ['.botsrc', '.botsrc.json'];
-  let dir = null;
-  let file = null;
+  const config = await getConfig(context, 'namingCop');
 
-  try {
-    dir = await context.github.repos.getContents(args);
-  } catch (e) {
-    dir = null;
-  }
-
-  for (const f of dir.data) {
-    if (files.includes(f.name)) {
-      args.path = f.path;
-    }
-  }
-  
-  if (args.path !== '.') {
-    try {
-      file = await context.github.repos.getContents(args);
-    } catch (e) {
-      file = null;
-    }
-  }
-
-  if (file !== null) {
-    const buff = Buffer.from(file.data.content, 'base64');
-    const content = buff.toString('ascii');
-    let config = null;
-    
-    try {
-      config = JSON.parse(content);
-    } catch (e) {
-      config = null;
-    }
-
-    if (config && config.namingCop && config.namingCop.validTypes) {
-      rules['type-enum'][2] = config.namingCop.validTypes;
-    }
+  if (config && config.validTypes) {
+    rules['type-enum'][2] = config.validTypes;
   }
 };
 

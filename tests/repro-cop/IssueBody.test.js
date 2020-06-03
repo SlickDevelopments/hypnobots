@@ -42,7 +42,7 @@ describe('Repro Cop', () => {
       .reply(200);
 
     // Receive a webhook event
-    await probot.receive({ name: 'pull_request', payload });
+    await probot.receive({ name: 'issues', payload });
   });
 
   test('should not create a comment when there are links' +
