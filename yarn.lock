@@ -745,10 +745,10 @@
   resolved "https://registry.npmjs.org/@poool/eslint-config-node/-/eslint-config-node-0.0.1-alpha.6.tgz#0945cc42053c982f8a0f536e5aeb4d34addddad7"
   integrity sha512-lL4+CNBgSN15iAvFfzAi4xfC758KbRkapToEjHWN02Rs0S/w+1oBIRN4IGM5YU5UR311L1tl9mO3YwwmoRyitg==
 
-"@poool/eslint-config@0.0.1-alpha.6":
-  version "0.0.1-alpha.6"
-  resolved "https://registry.yarnpkg.com/@poool/eslint-config/-/eslint-config-0.0.1-alpha.6.tgz#dffd93a47b803868e0a0050fb6eb13ed598ed5bc"
-  integrity sha512-kh0r4Qi+ZrafoAtgw4rlzx+G2nLBi5H7hw53ZkXZQr8aGsfg1xsHlAo0MCy13uaBBx4uXfb968wR8FLOBNChZA==
+"@poool/eslint-config@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@poool/eslint-config/-/eslint-config-1.0.0.tgz#ea415d15227920b2e32df335eb70a22572dc2b1e"
+  integrity sha512-7BU/d780ICinl7Yb4RAtrn8D/cxLnD6d85f/E9ZUI3QZjUJOQba95cN/zz7Eeqnz0Zje30OY7pU8T0N3h07wmg==
 
 "@sindresorhus/is@^0.14.0":
   version "0.14.0"
