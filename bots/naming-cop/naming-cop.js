@@ -35,7 +35,7 @@ const checkBranch = async (context, report, branch) => {
     return;
   }
 
-  const regex = /^(\w*)\/(\S*)$/;
+  const regex = /^(\w*)\/(\w*-?)*$/;
   const [_, type = ''] = branch.match(regex) || [];
 
   if (types.includes(type)) {
