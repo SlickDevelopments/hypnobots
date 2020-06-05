@@ -35,7 +35,7 @@ const checkBranch = async (context, report, branch) => {
     return;
   }
 
-  const regex = /^(\w*)\/(\w*)$/;
+  const regex = /^(\w*)\/(\S*)$/;
   const [_, type = ''] = branch.match(regex) || [];
 
   if (types.includes(type)) {
@@ -44,7 +44,7 @@ const checkBranch = async (context, report, branch) => {
 
   errors.push({
     message: !type
-      ? 'branch name was not recognized as <type>/<name>'
+      ? 'branch name was not recognized as type/name'
       : 'type should be [docs, feature, fix, refactor]',
   });
 
