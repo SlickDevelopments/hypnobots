@@ -27,8 +27,7 @@ const checkTitle = async (context, rules, report) => {
   });
 };
 
-const checkBranch = async (context, report) => {
-  const branch = context.payload.pull_request.head.ref;
+const checkBranch = async (context, report, branch) => {
   const types = ['docs', 'feature', 'fix', 'refactor'];
   const errors = [];
 
@@ -36,7 +35,7 @@ const checkBranch = async (context, report) => {
     return;
   }
 
-  const regex = /^(\w*)\/(\w*)$/;
+  const regex = /^(\w*)\/(\w*-?)*$/;
   const [_, type = ''] = branch.match(regex) || [];
 
   if (types.includes(type)) {
@@ -45,7 +44,7 @@ const checkBranch = async (context, report) => {
 
   errors.push({
     message: !type
-      ? 'branch name was not recognized as <type>/<name>'
+      ? 'branch name was not recognized as type/name'
       : 'type should be [docs, feature, fix, refactor]',
   });
 
@@ -90,10 +89,15 @@ const checkFiles = async (context, rules) => {
 module.exports = async context => {
   const { rules } = await load(config);
   const report = [];
+  const branch = context.payload.pull_request.head.ref;
+
+  if (/^renovate/.test(branch)) {
+    return;
+  }
 
   await checkFiles(context, rules);
   await checkTitle(context, rules, report);
-  await checkBranch(context, report);
+  await checkBranch(context, report, branch);
   await checkCommits(context, rules, report);
 
   if (report.length > 0) {
