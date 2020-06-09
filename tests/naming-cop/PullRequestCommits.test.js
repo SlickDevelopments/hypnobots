@@ -91,6 +91,38 @@ describe('Naming Cop Commits', () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
+  test('should not create a comment when a pull request is opened ' +
+    'and commits are not ill-formed and are breaking change', async () => {
+    const fn = jest.fn();
+    // Test that we correctly return a test token
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/pulls/1/commits')
+      .reply(200, [{ commit: { message: 'test!: message' }, sha: '1' }]);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+        fn();
+        return true;
+      })
+      .reply(200);
+
+    // Receive a webhook event
+    await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
+  });
+
   afterEach(() => {
     nock.cleanAll();
     nock.enableNetConnect();

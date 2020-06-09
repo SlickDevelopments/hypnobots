@@ -5,11 +5,11 @@ const getConfig = require('../../utils/getConfig');
 
 const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 
-const checkTitle = async (context, rules, report) => {
+const checkTitle = async (context, rules, parser, report) => {
   const pull = context.payload.pull_request;
   const clean = Array.from(pull.title).slice(2).join('');
   const emoji = Array.from(pull.title)[0];
-  const { valid, errors, warnings } = await lint(clean, rules);
+  const { valid, errors, warnings } = await lint(clean, rules, parser);
 
   if (
     (pull.user && pull.user.login === 'renovate[bot]') ||
@@ -57,19 +57,20 @@ const checkBranch = async (context, report, branch) => {
   });
 };
 
-const checkCommits = async (context, rules, report) => {
+const checkCommits = async (context, rules, parser, report) => {
   const pull = context.issue();
   const { data } = await context.github.pulls.listCommits(pull);
 
   for (const c of data) {
-    const { valid, errors, warnings } = await lint(c.commit.message, rules);
+    const message = c.commit.message;
+    const { valid, errors, warnings } = await lint(message, rules, parser);
 
     if (valid && warnings.length === 0) {
       continue;
     }
 
     report.push({
-      message: c.commit.message,
+      message: message,
       type: 'commit',
       id: c.sha,
       errors,
@@ -87,7 +88,7 @@ const checkFiles = async (context, rules) => {
 };
 
 module.exports = async context => {
-  const { rules } = await load(config);
+  const { parserPreset, rules } = await load(config);
   const report = [];
   const branch = context.payload.pull_request.head.ref;
 
@@ -96,9 +97,9 @@ module.exports = async context => {
   }
 
   await checkFiles(context, rules);
-  await checkTitle(context, rules, report);
+  await checkTitle(context, rules, parserPreset, report);
   await checkBranch(context, report, branch);
-  await checkCommits(context, rules, report);
+  await checkCommits(context, rules, parserPreset, report);
 
   if (report.length > 0) {
     let response = format(report);
