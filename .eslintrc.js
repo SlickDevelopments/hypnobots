@@ -7,4 +7,7 @@ module.exports = {
       jest: true,
     },
   }],
+  rules: {
+    'max-len': [2, { ignoreTemplateLiterals: true }],
+  },
 };
