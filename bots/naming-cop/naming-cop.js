@@ -1,7 +1,7 @@
 const { lint, load } = require('@commitlint/core');
 const config = require('./commitlint.config');
 const format = require('./format');
-const getConfig = require('../../utils/getConfig');
+const { getConfig } = require('../utils');
 
 const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 

@@ -1,5 +1,5 @@
 const file = require('./file');
-const getConfig = require('../../utils/getConfig');
+const { getConfig } = require('../utils');
 
 module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {

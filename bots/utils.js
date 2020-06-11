@@ -1,4 +1,4 @@
-module.exports = async (context, bot) => {
+const getConfig = async (context, bot) => {
   const pull = context.issue();
   const args = { owner: pull.owner, repo: pull.repo, path: '.' };
   const files = ['.botsrc', '.botsrc.json'];
@@ -38,4 +38,22 @@ module.exports = async (context, bot) => {
 
     return (config[bot] ? config[bot] : null);
   }
+};
+
+const ensureFlag = (flags, flag) =>
+  flags.includes(flag) ? flags : flags + flag;
+
+const matchAll = function * matchAll (str, regex) {
+  const localCopy = new RegExp(regex, ensureFlag(regex.flags, 'g'));
+  let match = localCopy.exec(str);
+
+  while (match !== null) {
+    yield match;
+    match = localCopy.exec(str);
+  }
+};
+
+module.exports = {
+  getConfig,
+  matchAll,
 };

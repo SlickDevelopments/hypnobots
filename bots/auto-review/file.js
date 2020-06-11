@@ -1,4 +1,4 @@
-const matchAll = require('../../utils/matchAll');
+const { matchAll } = require('../utils');
 
 module.exports = async (context, path, reviewers, collabs, maxAssignees) => {
   const pull = context.issue();

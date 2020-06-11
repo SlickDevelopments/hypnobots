@@ -1,4 +1,4 @@
-const matchAll = require('../../utils/matchAll');
+const { matchAll } = require('../utils');
 
 const domains = ['jsbin', 'jsfiddle', 'plnkr', 'codepen'];
 const body = `
