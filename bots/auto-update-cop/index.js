@@ -1,3 +1,5 @@
+const { normalizeIssue } = require('../utils');
+
 module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     try {
@@ -15,7 +17,7 @@ module.exports = app => {
       const response = `⚠️ Cannot update branch : ${e.message}`;
       const comment = context.issue({ body: response });
 
-      context.github.issues.createComment(comment);
+      context.github.issues.createComment(normalizeIssue(comment));
     }
   });
 };

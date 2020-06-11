@@ -1,4 +1,5 @@
 const check = require('./naming-cop');
+const { normalizeIssue } = require('../utils');
 
 module.exports = app => {
   app.on('pull_request.opened', check);
@@ -17,7 +18,7 @@ module.exports = app => {
     }
 
     if (comment !== null) {
-      context.github.issues.createComment(comment);
+      context.github.issues.createComment(normalizeIssue(comment));
     }
   });
 };

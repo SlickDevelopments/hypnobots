@@ -1,4 +1,4 @@
-const { matchAll } = require('../utils');
+const { matchAll, normalizeIssue } = require('../utils');
 
 const domains = ['jsbin', 'jsfiddle', 'plnkr', 'codepen'];
 const body = `
@@ -31,7 +31,7 @@ module.exports = app => {
 
     if (!found.length) {
       const issueComment = context.issue({ body });
-      context.github.issues.createComment(issueComment);
+      context.github.issues.createComment(normalizeIssue(issueComment));
     }
   });
 };
