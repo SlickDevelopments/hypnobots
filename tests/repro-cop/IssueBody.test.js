@@ -3,7 +3,7 @@ const path = require('path');
 const nock = require('nock');
 const { createProbot } = require('probot');
 
-const namingCop = require('../../bots/repro-cop');
+const bot = require('../../bots/repro-cop');
 const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
@@ -22,7 +22,7 @@ describe('Repro Cop', () => {
   beforeEach(async () => {
     nock.disableNetConnect();
     probot = createProbot({ id: 123, cert });
-    probot.load(namingCop);
+    probot.load(bot);
   });
 
   test('should create a comment when there is no links' +

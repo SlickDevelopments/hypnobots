@@ -3,7 +3,7 @@ const path = require('path');
 const nock = require('nock');
 const { createProbot } = require('probot');
 
-const namingCop = require('../../bots/naming-cop');
+const bot = require('../../bots/naming-cop');
 const payload = require('../fixtures/issue_comment.created');
 
 const fixturesDir = path.resolve('./tests/fixtures');
@@ -18,7 +18,7 @@ describe('Naming Cop Issue', () => {
   beforeEach(async () => {
     nock.disableNetConnect();
     probot = createProbot({ id: 123, cert });
-    probot.load(namingCop);
+    probot.load(bot);
   });
 
   test('should create a comment when a comment is created ' +
