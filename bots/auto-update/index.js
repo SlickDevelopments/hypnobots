@@ -1,7 +1,3 @@
-/**
- * This is the main entrypoint to your Probot app
- * @param {import('probot').Application} app
- */
 module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     try {
@@ -11,7 +7,7 @@ module.exports = app => {
       const base = context.payload.pull_request.base.label;
       const compare = { owner: owner, repo: repo, base: base, head: head };
       const { data } = await context.github.repos.compareCommits(compare);
-      
+
       if (data.behind_by > 0) {
         await context.github.pulls.updateBranch(pull);
       }

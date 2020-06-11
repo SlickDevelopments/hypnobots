@@ -16,7 +16,7 @@ module.exports = async (context, bot) => {
       args.path = f.path;
     }
   }
-  
+
   if (args.path !== '.') {
     try {
       file = await context.github.repos.getContents(args);
@@ -29,7 +29,7 @@ module.exports = async (context, bot) => {
     const buff = Buffer.from(file.data.content, 'base64');
     const content = buff.toString('ascii');
     let config = null;
-    
+
     try {
       config = JSON.parse(content);
     } catch (e) {
