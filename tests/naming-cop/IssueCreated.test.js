@@ -70,7 +70,7 @@ describe('Naming Cop Issue', () => {
       .reply(200, { token: 'test' });
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
         fn();
         return true;
       })

@@ -92,7 +92,7 @@ describe('Naming Cop Comments', () => {
       ]);
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
         fn();
         return true;
       })
@@ -132,7 +132,7 @@ describe('Naming Cop Comments', () => {
       ]);
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
         fn();
         return true;
       })

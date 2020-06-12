@@ -44,7 +44,7 @@ const getConfig = async (context, bot) => {
       config = null;
     }
 
-    return (config[bot] ? config[bot] : null);
+    return config ? config[bot] : null;
   }
 };
 

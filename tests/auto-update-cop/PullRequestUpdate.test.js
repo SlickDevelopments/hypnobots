@@ -35,7 +35,7 @@ describe('Auto Update', () => {
       .reply(200, { behind_by: 2 });
 
     nock('https://api.github.com')
-      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
+      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', () => {
         fn();
         return true;
       })
@@ -58,7 +58,7 @@ describe('Auto Update', () => {
       .reply(200, { behind_by: 0 });
 
     nock('https://api.github.com')
-      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
+      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', () => {
         fn();
         return true;
       })
