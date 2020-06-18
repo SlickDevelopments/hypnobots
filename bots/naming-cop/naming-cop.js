@@ -1,4 +1,6 @@
 const { lint, load } = require('@commitlint/core');
+const { strip } = require('node-emoji');
+
 const config = require('./commitlint.config');
 const format = require('./format');
 const getConfig = require('../../utils/getConfig');
@@ -7,7 +9,7 @@ const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 
 const checkTitle = async (context, rules, parser, report) => {
   const pull = context.payload.pull_request;
-  const clean = Array.from(pull.title).slice(2).join('');
+  const clean = strip(pull.title);
   const emoji = Array.from(pull.title)[0];
   const { valid, errors, warnings } = await lint(clean, rules, parser);
 
