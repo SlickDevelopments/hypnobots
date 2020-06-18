@@ -3,7 +3,7 @@ const path = require('path');
 const nock = require('nock');
 const { createProbot } = require('probot');
 
-const namingCop = require('../../bots/auto-review');
+const bot = require('../../bots/auto-review');
 const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
@@ -19,7 +19,7 @@ describe('Auto Review', () => {
   beforeEach(async () => {
     nock.disableNetConnect();
     probot = createProbot({ id: 123, cert });
-    probot.load(namingCop);
+    probot.load(bot);
   });
 
   test('should send a pull request review request', async () => {
@@ -50,13 +50,13 @@ describe('Auto Review', () => {
             },
           }]
       );
-    
+
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
         content: 'KiAgICAgICAgICAgICAgICAgQGhpaW1iZXg=', // *      @hiimbex
       });
-    
+
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['bexhiim'] });
@@ -97,13 +97,13 @@ describe('Auto Review', () => {
           },
         ],
       );
-    
+
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
         content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // *       @bexhiim @user
       });
-    
+
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['bexhiim'] });
@@ -157,13 +157,13 @@ describe('Auto Review', () => {
           },
         ],
       );
-    
+
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
         content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // *       @bexhiim @user
       });
-    
+
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['notOwner', 'bexhiim'] });
@@ -203,7 +203,7 @@ describe('Auto Review', () => {
             },
           }],
       );
-    
+
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(404);
@@ -214,7 +214,7 @@ describe('Auto Review', () => {
         return true;
       })
       .reply(200);
-    
+
     // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
   });

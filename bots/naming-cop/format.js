@@ -8,7 +8,7 @@ I've found one or more issues in this PR:
 Happy coding!
 `;
 
-module.exports = (report) => {
+module.exports = report => {
   let message = '';
 
   for (const error of report) {

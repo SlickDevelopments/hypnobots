@@ -1,14 +1,13 @@
-const matchAll = require('../../utils/matchAll');
+const { matchAll, normalizeIssue } = require('../utils');
 
 const domains = ['jsbin', 'jsfiddle', 'plnkr', 'codepen'];
-const body = `Hi!
+const body = `
+Hi!
 
-Thank you for reporting this issue. It appears you did not attach any
-repro link to it.
-The fastest way for us to investigate and resolve this issue is to create a
-repro of the actual bug.
+Thank you for reporting this issue. It appears you did not attach any repro link to it.
+The fastest way for us to investigate and resolve this issue is to create a repro of the actual bug.
 
-You may use any of the common JS playgrounds out there:
+You may use any of the common JS playgrounds:
 
 - [JSBin](https://jsbin.com)
 - [JSFiddle](https://jsfiddle.net)
@@ -17,7 +16,7 @@ You may use any of the common JS playgrounds out there:
 
 -------------
 
-Happy coding !
+Happy coding!
 `;
 
 module.exports = app => {
@@ -32,7 +31,7 @@ module.exports = app => {
 
     if (!found.length) {
       const issueComment = context.issue({ body });
-      context.github.issues.createComment(issueComment);
+      context.github.issues.createComment(normalizeIssue(issueComment));
     }
   });
 };
