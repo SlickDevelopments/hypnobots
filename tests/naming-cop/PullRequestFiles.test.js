@@ -3,7 +3,7 @@ const path = require('path');
 const nock = require('nock');
 const { createProbot } = require('probot');
 
-const namingCop = require('../../bots/naming-cop');
+const bot = require('../../bots/naming-cop');
 const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
@@ -23,7 +23,7 @@ describe('Naming Cop Files', () => {
   beforeEach(async () => {
     nock.disableNetConnect();
     probot = createProbot({ id: 123, cert });
-    probot.load(namingCop);
+    probot.load(bot);
   });
 
   test('should change the rules and create a comment', async () => {
@@ -84,7 +84,7 @@ describe('Naming Cop Files', () => {
       .reply(200, []);
 
     nock('https://api.github.com')
-      .post('/repos/hiimbex/testing-things/issues/1/comments', (body) => {
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
         fn();
         return true;
       })

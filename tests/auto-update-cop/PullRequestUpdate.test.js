@@ -3,7 +3,7 @@ const path = require('path');
 const nock = require('nock');
 const { createProbot } = require('probot');
 
-const namingCop = require('../../bots/auto-update');
+const bot = require('../../bots/auto-update-cop');
 const payload = require('../fixtures/pull_request.opened');
 const commentBody = '⚠️ Cannot update branch : something awful happened';
 
@@ -20,7 +20,7 @@ describe('Auto Update', () => {
   beforeEach(async () => {
     nock.disableNetConnect();
     probot = createProbot({ id: 123, cert });
-    probot.load(namingCop);
+    probot.load(bot);
   });
 
   test('should update head branch', async () => {
@@ -35,7 +35,7 @@ describe('Auto Update', () => {
       .reply(200, { behind_by: 2 });
 
     nock('https://api.github.com')
-      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
+      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', () => {
         fn();
         return true;
       })
@@ -58,12 +58,12 @@ describe('Auto Update', () => {
       .reply(200, { behind_by: 0 });
 
     nock('https://api.github.com')
-      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', body => {
+      .put('/repos/hiimbex/testing-things/pulls/1/update-branch', () => {
         fn();
         return true;
       })
       .reply(202);
-      
+
     await probot.receive({ name: 'pull_request', payload });
     expect(fn).not.toHaveBeenCalled();
   });
@@ -92,7 +92,7 @@ describe('Auto Update', () => {
         return true;
       })
       .reply(200);
-    
+
     // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
   });

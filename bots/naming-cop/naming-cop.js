@@ -3,7 +3,7 @@ const { strip } = require('node-emoji');
 
 const config = require('./commitlint.config');
 const format = require('./format');
-const getConfig = require('../../utils/getConfig');
+const { getConfig, normalizeIssue, normalizePR } = require('../utils');
 
 const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
 let ignoreList = ['renovate[bot]', 'dependabot[bot]'];
@@ -66,7 +66,7 @@ const checkBranch = async (context, report, branch) => {
 
 const checkCommits = async (context, rules, parser, report) => {
   const pull = context.issue();
-  const { data } = await context.github.pulls.listCommits(pull);
+  const { data } = await context.github.pulls.listCommits(normalizePR(pull));
 
   for (const c of data) {
     const message = c.commit.message;
@@ -117,7 +117,9 @@ module.exports = async context => {
   }
   if (report.length > 0) {
     let response = format(report);
-    const { data } = await context.github.issues.listComments(context.issue());
+    const issue = context.issue();
+    const { data } = await context.github.issues
+      .listComments(normalizeIssue(issue));
     let command = false;
     let found = false;
 
@@ -151,7 +153,7 @@ module.exports = async context => {
 
     if (response !== null) {
       const comment = context.issue({ body: response });
-      await context.github.issues.createComment(comment);
+      await context.github.issues.createComment(normalizeIssue(comment));
     }
   }
 };

@@ -1,9 +1,6 @@
 const file = require('./file');
-const getConfig = require('../../utils/getConfig');
-/**
- * This is the main entrypoint to your Probot app
- * @param {import('probot').Application} app
- */
+const { getConfig, normalizeIssue } = require('../utils');
+
 module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     const pull = context.issue();
@@ -27,20 +24,20 @@ module.exports = app => {
         reviewers.push(c.login.toLowerCase());
       }
     }
-    
+
     await file(context, 'CODEOWNERS', reviewers, data, maxAssignees);
-    
+
     if (reviewers.length > 0) {
       const resquest = {
         owner: pull.owner,
         repo: pull.repo,
         pull_number: pull.number,
-        reviewers: reviewers,
+        reviewers,
       };
       context.github.pulls.createReviewRequest(resquest);
     } else {
       const comment = context.issue({ body: 'Failed to find a reviewer ✖' });
-      context.github.issues.createComment(comment);
+      context.github.issues.createComment(normalizeIssue(comment));
     }
   });
 };
