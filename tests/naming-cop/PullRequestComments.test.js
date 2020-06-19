@@ -145,7 +145,7 @@ describe('Naming Cop Comments', () => {
   });
 
   test('should not create a comment because it\'s been' +
-       ' posted recently already and not activated', async () => {
+       ' posted recently already and bot is not activated', async () => {
     const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')

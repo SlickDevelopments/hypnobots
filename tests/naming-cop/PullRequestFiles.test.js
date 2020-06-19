@@ -167,7 +167,7 @@ describe('Naming Cop Files', () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
-  test('should support file errors and not create a comment', async () => {
+  test('should support json errors and not create a comment', async () => {
     const fn = jest.fn();
     // Test that we correctly return a test token
     nock('https://api.github.com')
