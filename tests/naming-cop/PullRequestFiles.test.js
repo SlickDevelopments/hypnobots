@@ -95,6 +95,115 @@ describe('Naming Cop Files', () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
+  test('should support directory errors and not create a comment', async () => {
+    const fn = jest.fn();
+    // Test that we correctly return a test token
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .replyWithError({
+        message: 'something awful happened',
+        code: 'AWFUL_ERROR',
+      });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/pulls/1/commits')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+        fn();
+        return true;
+      })
+      .reply(200);
+
+    // Receive a webhook event
+    await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  test('should support file errors and not create a comment', async () => {
+    const fn = jest.fn();
+    // Test that we correctly return a test token
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }]);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
+      .replyWithError({
+        message: 'something awful happened',
+        code: 'AWFUL_ERROR',
+      });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/pulls/1/commits')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+        fn();
+        return true;
+      })
+      .reply(200);
+
+    // Receive a webhook event
+    await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
+  });
+
+  test('should support json errors and not create a comment', async () => {
+    const fn = jest.fn();
+    // Test that we correctly return a test token
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }]);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
+      .reply(200, {
+        content: 'ewogICJuYW1pbmdDb3AiOiB7C',
+      });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/pulls/1/commits')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+        fn();
+        return true;
+      })
+      .reply(200);
+
+    // Receive a webhook event
+    await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
+  });
+
   afterEach(() => {
     nock.cleanAll();
     nock.enableNetConnect();
