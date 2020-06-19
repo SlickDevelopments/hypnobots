@@ -39,8 +39,9 @@ describe('Naming Cop Files', () => {
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
       .reply(200, {
-        content: 'ewogICJuYW1pbmdDb3AiOiB7CiAgICAidmFsaWRUe' +
-                 'XBlcyI6IFsgImZlYXQiLCAiZml4IiwgInRlc3QiXQogIH0KfQ==',
+        content: 'ewogICJuYW1pbmdDb3AiOiB7CiAgICAidmFsaWRUeXBlcyI6IFsgImZlYX' +
+          'QiLCAiZml4IiwgInRlc3QiXSwKICAgICJpZ25vcmVMaXN0IjogWyJhcmFuZG9tW2J' +
+          'vdF0iXQogIH0KfQ==',
       });
 
     nock('https://api.github.com')
