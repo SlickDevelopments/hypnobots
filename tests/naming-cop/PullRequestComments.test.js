@@ -144,6 +144,58 @@ describe('Naming Cop Comments', () => {
     expect(fn).not.toHaveBeenCalled();
   });
 
+  test('should not create a comment because it\'s been' +
+       ' posted recently already and not activated', async () => {
+    const fn = jest.fn();
+    // Test that we correctly return a test token
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' });
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/contents/.')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/pulls/1/commits')
+      .reply(200, []);
+
+    nock('https://api.github.com')
+      .get('/repos/hiimbex/testing-things/issues/1/comments')
+      .reply(200, [
+        {
+          body: 'a random comment',
+          user: {
+            login: 'hiimbex',
+          },
+        },
+        {
+          body: pullCreatedBody.body,
+          user: {
+            login: 'naming-cop[bot]',
+          },
+        },
+        {
+          body: '@naming-cop stfu',
+          user: {
+            login: 'hiimbex',
+          },
+        },
+      ]);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+        fn();
+        return true;
+      })
+      .reply(200);
+
+    // Receive a webhook event
+    payload.pull_request.title = '📦 oui: change oui';
+    await probot.receive({ name: 'pull_request', payload });
+    expect(fn).not.toHaveBeenCalled();
+  });
+
   afterEach(() => {
     nock.cleanAll();
     nock.enableNetConnect();
