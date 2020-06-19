@@ -19,6 +19,10 @@ const getConfig = async (context, bot) => {
     dir = null;
   }
 
+  if (dir === null) {
+    return null;
+  }
+
   for (const f of dir.data) {
     if (files.includes(f.name)) {
       args.path = f.path;
