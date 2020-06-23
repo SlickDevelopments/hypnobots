@@ -1,17 +1,24 @@
 const { lint, load } = require('@commitlint/core');
-const { strip } = require('node-emoji');
+const { strip, replace } = require('node-emoji');
 
 const config = require('./commitlint.config');
 const format = require('./format');
 const { getConfig, normalizeIssue, normalizePR } = require('../utils');
 
-const emojis = ['✨', '🐛', '♻️', '🏗', '📦', '📖'];
+const emojis = [
+  'sparkles',
+  'bug',
+  'recycle',
+  'building_construction',
+  'package',
+  'open_book',
+];
 let ignoreList = ['renovate[bot]', 'dependabot[bot]'];
 
 const checkTitle = async (context, rules, parser, report) => {
   const pull = context.payload.pull_request;
   const clean = strip(pull.title);
-  const emoji = Array.from(pull.title)[0];
+  const emoji = replace(Array.from(pull.title)[0], e => `${e.key}`);
   const { valid, errors, warnings } = await lint(clean, rules, parser);
 
   if (
