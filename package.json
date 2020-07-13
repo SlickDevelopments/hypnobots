@@ -27,7 +27,7 @@
     "@commitlint/core": "9.1.1",
     "dotenv": "8.2.0",
     "node-emoji": "1.10.0",
-    "probot": "9.11.5"
+    "probot": "9.11.7"
   },
   "devDependencies": {
     "@poool/eslint-config": "1.2.3",
