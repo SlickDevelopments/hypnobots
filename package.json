@@ -30,9 +30,9 @@
     "probot": "9.11.5"
   },
   "devDependencies": {
-    "@poool/eslint-config": "1.2.2",
-    "@poool/eslint-config-node": "1.2.2",
-    "@poool/eslint-plugin": "1.2.2",
+    "@poool/eslint-config": "1.2.3",
+    "@poool/eslint-config-node": "1.2.3",
+    "@poool/eslint-plugin": "1.2.3",
     "babel-eslint": "10.1.0",
     "codecov": "3.7.0",
     "eslint": "7.4.0",
