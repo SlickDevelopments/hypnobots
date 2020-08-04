@@ -1,0 +1,32 @@
+name: CD
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    name: Deploy ${{ matrix.bots }}
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        bots: ["auto-review-bot", "naming-cop", "auto-update-bot", "repro-link-cop"]
+    steps:
+      - name: Check for CI
+        uses: fountainhead/action-wait-for-check@v1.0.0
+        id: ci_check
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          checkName: test
+          ref: ${{ github.sha }}
+
+      - name: Checkout code
+        if: steps.ci_check.outputs.conclusion == 'success'
+        uses: actions/checkout@v2
+      - name: Deploy to Heroku
+        if: steps.ci_check.outputs.conclusion == 'success'
+        uses: akhileshns/heroku-deploy@v3.0.5
+        with:
+          heroku_api_key: ${{ secrets.HEROKU_API_KEY }}
+          heroku_app_name: ${{ matrix.bots }}
+          heroku_email: "apps@poool.fr"
