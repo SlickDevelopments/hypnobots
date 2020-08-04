@@ -27,6 +27,7 @@ module.exports = {
         'refactor',
         'test',
         'tests',
+        'deploy',
       ],
     ],
   },
