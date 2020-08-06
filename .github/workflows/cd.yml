@@ -2,7 +2,7 @@ name: CD
 
 on:
   release:
-    types: [published]
+    types: [published, released]
 
 jobs:
   deploy:
@@ -17,9 +17,8 @@ jobs:
         id: ci_check
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: test
+          checkName: "Unit tests (10)"
           ref: ${{ github.sha }}
-
       - name: Checkout code
         if: steps.ci_check.outputs.conclusion == 'success'
         uses: actions/checkout@v2
