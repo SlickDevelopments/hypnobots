@@ -17,7 +17,7 @@ jobs:
         id: ci_check
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
-          checkName: "Unit tests (10)"
+          checkName: "The end"
           ref: ${{ github.sha }}
       - name: Checkout code
         if: steps.ci_check.outputs.conclusion == 'success'
