@@ -1,24 +1,23 @@
-const { promises: fsp } = require('fs');
+const fs = require('fs');
 const path = require('path');
 const nock = require('nock');
-const { createProbot } = require('probot');
+const { Probot } = require('probot');
 
 const bot = require('../../bots/auto-review');
 const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
-jest.setTimeout(30000);
 describe('Auto Review', () => {
-  let probot, cert;
+  let probot, privateKey;
 
   beforeAll(async () => {
-    cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
+    privateKey = fs.readFileSync(path.join(fixturesDir, 'mock-cert.pem'));
   });
 
   beforeEach(async () => {
     nock.disableNetConnect();
-    probot = createProbot({ id: 123, cert });
+    probot = new Probot({ id: 123, privateKey });
     probot.load(bot);
   });
 

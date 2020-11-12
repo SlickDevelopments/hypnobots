@@ -72,7 +72,7 @@ const checkBranch = async (context, report, branch) => {
 };
 
 const checkCommits = async (context, rules, parser, report) => {
-  const pull = context.issue();
+  const pull = context.pullRequest();
   const { data } = await context.github.pulls.listCommits(normalizePR(pull));
 
   for (const c of data) {
@@ -122,6 +122,7 @@ module.exports = async context => {
   if (ignoreList !== ignoreListRef) {
     ignoreList = ignoreListRef;
   }
+
   if (report.length > 0) {
     let response = format(report);
     const issue = context.issue();

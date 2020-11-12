@@ -2,10 +2,10 @@
 I've found one or more issues in this PR:
 
 
-`📦 oui: change oui` (#undefined)
+`📦 oui: change oui` (#1)
 <details>
 
-  - ❌ type must be one of [chore, docs, feat, fix, refactor, test, tests, deploy]
+  - ❌ type must be one of [chore, docs, feat, feature, fix, refactor, test, tests, deploy, release]
 </details>
 
 

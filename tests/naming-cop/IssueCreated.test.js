@@ -1,7 +1,7 @@
 const { promises: fsp } = require('fs');
 const path = require('path');
 const nock = require('nock');
-const { createProbot } = require('probot');
+const { Probot } = require('probot');
 
 const bot = require('../../bots/naming-cop');
 const payload = require('../fixtures/issue_comment.created');
@@ -9,15 +9,15 @@ const payload = require('../fixtures/issue_comment.created');
 const fixturesDir = path.resolve('./tests/fixtures');
 
 describe('Naming Cop Issue', () => {
-  let probot, cert;
+  let probot, privateKey;
 
   beforeAll(async () => {
-    cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
+    privateKey = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
   });
 
   beforeEach(async () => {
     nock.disableNetConnect();
-    probot = createProbot({ id: 123, cert });
+    probot = new Probot({ id: 123, privateKey });
     probot.load(bot);
   });
 
@@ -32,7 +32,7 @@ describe('Naming Cop Issue', () => {
     // Test that a comment is posted
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject('Okay i will now shut up.');
+        expect(body).toMatchObject({ body: 'Okay I will now shut up.' });
         return true;
       })
       .reply(200);
@@ -52,7 +52,7 @@ describe('Naming Cop Issue', () => {
     // Test that a comment is posted
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject('Yay i can speak.');
+        expect(body).toMatchObject({ body: 'Yay I can speak.' });
         return true;
       })
       .reply(200);

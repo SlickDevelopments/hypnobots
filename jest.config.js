@@ -1,4 +1,5 @@
 module.exports = {
+  clearMocks: true,
   testPathIgnorePatterns: [
     '<rootDir>/node_modules',
   ],

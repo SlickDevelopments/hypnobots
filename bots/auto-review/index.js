@@ -1,7 +1,7 @@
 const file = require('./file');
 const { getConfig, normalizeIssue } = require('../utils');
 
-module.exports = app => {
+module.exports = ({ app }) => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     const pull = context.issue();
     const repo = context.repo();
@@ -34,7 +34,7 @@ module.exports = app => {
         pull_number: pull.number,
         reviewers,
       };
-      context.github.pulls.createReviewRequest(resquest);
+      context.github.pulls.requestReviewers(resquest);
     } else {
       const comment = context.issue({ body: 'Failed to find a reviewer ✖' });
       context.github.issues.createComment(normalizeIssue(comment));

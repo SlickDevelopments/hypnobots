@@ -11,7 +11,7 @@ module.exports = async (context, path, reviewers, collabs, maxAssignees) => {
   let file = null;
 
   try {
-    file = await context.github.repos.getContents(args);
+    file = await context.github.repos.getContent(args);
   } catch (e) {
     file = null;
   }

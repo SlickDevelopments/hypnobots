@@ -19,7 +19,7 @@ You may use any of the common JS playgrounds:
 Happy coding!
 `;
 
-module.exports = app => {
+module.exports = ({ app }) => {
   app.on(['issues.opened', 'issues.reopened'], async context => {
     const message = context.payload.issue.body;
     const regex = /(?:https?:\/\/)(?:www.)?(\w*).\w*/g;
