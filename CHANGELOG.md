@@ -2,6 +2,23 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.3.0](https://github.com/p3ol/hypnobots/compare/v1.2.3...v1.3.0) (2020-11-12)
+
+
+### Features
+
+* **naming-cop:** add more commit/pr types ([bdeb179](https://github.com/p3ol/hypnobots/commit/bdeb179a8dc968b83f7210107a17582096f61f0c))
+
+
+### Bug Fixes
+
+* fix compatibility with probot 10 & octokit 17/18 ([0cfe735](https://github.com/p3ol/hypnobots/commit/0cfe735b2c74dae01696f39fe1840e725ac81dcf))
+* **deps:** update commitlint monorepo to v11 ([eb5301e](https://github.com/p3ol/hypnobots/commit/eb5301ef9c2ba9b096592c84ee4e2013df9b55ee))
+* **deps:** update commitlint monorepo to v9.1.2 ([4bfa8a7](https://github.com/p3ol/hypnobots/commit/4bfa8a787bb8576a0882c0922cd081c29f8d2bcc))
+* **deps:** update dependency probot to v10 ([e3b7961](https://github.com/p3ol/hypnobots/commit/e3b79615e4ac21e070e0c90d0c1ac0bb4df4947c))
+* **deps:** update dependency probot to v10 ([c875a41](https://github.com/p3ol/hypnobots/commit/c875a4179de71400a37c3cf7dfb791404a69c5ba))
+* **deps:** update dependency probot to v9.15.1 ([4d6296c](https://github.com/p3ol/hypnobots/commit/4d6296cfee015e6c67ae370ba614403623ed9b2d))
+
 ### [1.2.3](https://github.com/p3ol/hypnobots/compare/v1.2.2...v1.2.3) (2020-08-06)
 
 ### [1.2.2](https://github.com/p3ol/hypnobots/compare/v1.2.1...v1.2.2) (2020-08-06)
