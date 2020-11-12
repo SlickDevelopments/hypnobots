@@ -14,7 +14,7 @@ const getConfig = async (context, bot) => {
   let file = null;
 
   try {
-    dir = await context.github.repos.getContents(args);
+    dir = await context.github.repos.getContent(args);
   } catch (e) {
     dir = null;
   }
@@ -31,7 +31,7 @@ const getConfig = async (context, bot) => {
 
   if (args.path !== '.') {
     try {
-      file = await context.github.repos.getContents(args);
+      file = await context.github.repos.getContent(args);
     } catch (e) {
       file = null;
     }

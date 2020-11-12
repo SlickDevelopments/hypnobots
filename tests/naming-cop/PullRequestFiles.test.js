@@ -1,19 +1,18 @@
 const { promises: fsp } = require('fs');
 const path = require('path');
 const nock = require('nock');
-const { createProbot } = require('probot');
+const { Probot } = require('probot');
 
 const bot = require('../../bots/naming-cop');
 const payload = require('../fixtures/pull_request.opened');
 
 const fixturesDir = path.resolve('./tests/fixtures');
 
-jest.setTimeout(30000);
 describe('Naming Cop Files', () => {
-  let probot, cert, pullCreatedBody;
+  let probot, privateKey, pullCreatedBody;
 
   beforeAll(async () => {
-    cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
+    privateKey = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
     pullCreatedBody = {
       body: await fsp
         .readFile(path.join(fixturesDir, 'pr-message-custom.txt'), 'utf-8'),
@@ -22,7 +21,7 @@ describe('Naming Cop Files', () => {
 
   beforeEach(async () => {
     nock.disableNetConnect();
-    probot = createProbot({ id: 123, cert });
+    probot = new Probot({ id: 123, privateKey });
     probot.load(bot);
   });
 
@@ -37,7 +36,10 @@ describe('Naming Cop Files', () => {
       .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }]);
 
     nock('https://api.github.com')
-      .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
+      .get(
+        '/repos/hiimbex/testing-things/contents/' +
+        encodeURIComponent('.botsrc.json')
+      )
       .reply(200, {
         content: 'ewogICJuYW1pbmdDb3AiOiB7CiAgICAidmFsaWRUeXBlcyI6IFsgImZlYX' +
           'QiLCAiZml4IiwgInRlc3QiXSwKICAgICJpZ25vcmVMaXN0IjogWyJhcmFuZG9tW2J' +
@@ -104,7 +106,7 @@ describe('Naming Cop Files', () => {
 
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.')
-      .replyWithError({
+      .reply(404, {
         message: 'something awful happened',
         code: 'AWFUL_ERROR',
       });
@@ -141,8 +143,11 @@ describe('Naming Cop Files', () => {
       .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }]);
 
     nock('https://api.github.com')
-      .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
-      .replyWithError({
+      .get(
+        '/repos/hiimbex/testing-things/contents/' +
+        encodeURIComponent('.botsrc.json')
+      )
+      .reply(404, {
         message: 'something awful happened',
         code: 'AWFUL_ERROR',
       });
@@ -179,7 +184,10 @@ describe('Naming Cop Files', () => {
       .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }]);
 
     nock('https://api.github.com')
-      .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
+      .get(
+        '/repos/hiimbex/testing-things/contents/' +
+        encodeURIComponent('.botsrc.json')
+      )
       .reply(200, {
         content: 'ewogICJuYW1pbmdDb3AiOiB7C',
       });

@@ -2,7 +2,7 @@
 I've found one or more issues in this PR:
 
 
-`🎉 chore: change things` (#undefined)
+`🎉 chore: change things` (#1)
 <details>
 
   - ❌ emoji should be [✨, 🐛, ♻️, 🏗, 📦, 📖]

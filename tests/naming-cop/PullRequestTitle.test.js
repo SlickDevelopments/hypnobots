@@ -1,7 +1,7 @@
 const { promises: fsp } = require('fs');
 const path = require('path');
 const nock = require('nock');
-const { createProbot } = require('probot');
+const { Probot } = require('probot');
 
 const bot = require('../../bots/naming-cop');
 const payload = require('../fixtures/pull_request.opened');
@@ -10,10 +10,10 @@ const fixturesDir = path.resolve('./tests/fixtures');
 
 jest.setTimeout(30000);
 describe('Naming Cop Title', () => {
-  let probot, cert, pullCreatedBody, pullEmojiCreatedBody;
+  let probot, privateKey, pullCreatedBody, pullEmojiCreatedBody;
 
   beforeAll(async () => {
-    cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
+    privateKey = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
     pullCreatedBody = {
       body: await fsp
         .readFile(path.join(fixturesDir, 'pr-message.txt'), 'utf-8'),
@@ -26,7 +26,7 @@ describe('Naming Cop Title', () => {
 
   beforeEach(async () => {
     nock.disableNetConnect();
-    probot = createProbot({ id: 123, cert });
+    probot = new Probot({ id: 123, privateKey });
     probot.load(bot);
   });
 

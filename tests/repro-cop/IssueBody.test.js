@@ -1,7 +1,7 @@
 const { promises: fsp } = require('fs');
 const path = require('path');
 const nock = require('nock');
-const { createProbot } = require('probot');
+const { Probot } = require('probot');
 
 const bot = require('../../bots/repro-cop');
 const payload = require('../fixtures/pull_request.opened');
@@ -9,10 +9,10 @@ const payload = require('../fixtures/pull_request.opened');
 const fixturesDir = path.resolve('./tests/fixtures');
 
 describe('Repro Cop', () => {
-  let probot, cert, issueCreatedBody;
+  let probot, privateKey, issueCreatedBody;
 
   beforeAll(async () => {
-    cert = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
+    privateKey = await fsp.readFile(path.join(fixturesDir, 'mock-cert.pem'));
     issueCreatedBody = {
       body: await fsp
         .readFile(path.join(fixturesDir, 'issue-message.txt'), 'utf-8'),
@@ -21,7 +21,7 @@ describe('Repro Cop', () => {
 
   beforeEach(async () => {
     nock.disableNetConnect();
-    probot = createProbot({ id: 123, cert });
+    probot = new Probot({ id: 123, privateKey });
     probot.load(bot);
   });
 
