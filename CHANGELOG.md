@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.1](https://github.com/p3ol/hypnobots/compare/v1.3.0...v1.3.1) (2020-11-16)
+
+
+### Bug Fixes
+
+* **deps:** update dependency probot to v10.14.0 ([7d61821](https://github.com/p3ol/hypnobots/commit/7d618218957eb82c2d16edddd51cf9d5ff5c4a66))
+* **deps:** update dependency probot to v10.14.1 ([073ad35](https://github.com/p3ol/hypnobots/commit/073ad35bc540c4f55851c7651e34739a039575ed))
+* **naming-cop:** add missing tests as well ([2be3402](https://github.com/p3ol/hypnobots/commit/2be3402bba09d137b80b71d410bf0f4794338817))
+* **naming-cop:** fix lint warning ([e7a84c2](https://github.com/p3ol/hypnobots/commit/e7a84c2481be36b3667c46fe4933b6b4c32ffee1))
+* **naming-cop:** fix missing test as allowed commit type ([62e3676](https://github.com/p3ol/hypnobots/commit/62e3676228736deb6b668fbab763a91fa54aed4e))
+
 ## [1.3.0](https://github.com/p3ol/hypnobots/compare/v1.2.3...v1.3.0) (2020-11-12)
 
 
