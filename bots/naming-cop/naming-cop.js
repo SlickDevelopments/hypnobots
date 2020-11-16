@@ -42,7 +42,7 @@ const checkTitle = async (context, rules, parser, report) => {
 };
 
 const checkBranch = async (context, report, branch) => {
-  const types = ['docs', 'feature', 'fix', 'refactor', 'chore'];
+  const types = ['docs', 'feature', 'test', 'fix', 'refactor', 'chore'];
   const errors = [];
 
   if (/^master|develop|renovate|dependabot/.test(branch)) {
@@ -59,7 +59,7 @@ const checkBranch = async (context, report, branch) => {
   errors.push({
     message: !type
       ? 'branch name was not recognized as type/name'
-      : 'type should be [docs, feature, fix, refactor]',
+      : 'type should be [docs, feature, test, fix, refactor]',
   });
 
   report.push({
