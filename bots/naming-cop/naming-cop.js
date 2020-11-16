@@ -43,7 +43,7 @@ const checkTitle = async (context, rules, parser, report) => {
 
 const checkBranch = async (context, report, branch) => {
   const types = [
-    'docs', 'feature', 'test', 'tests', 'fix', 'refactor', 'chore'
+    'docs', 'feature', 'test', 'tests', 'fix', 'refactor', 'chore',
   ];
   const errors = [];
 
@@ -61,7 +61,7 @@ const checkBranch = async (context, report, branch) => {
   errors.push({
     message: !type
       ? 'branch name was not recognized as type/name'
-      : 'type should be [docs, feature, test, tests, fix, refactor]',
+      : 'type should be [docs, feature, test, tests, fix, refactor, chore]',
   });
 
   report.push({
