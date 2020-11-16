@@ -42,7 +42,9 @@ const checkTitle = async (context, rules, parser, report) => {
 };
 
 const checkBranch = async (context, report, branch) => {
-  const types = ['docs', 'feature', 'test', 'tests', 'fix', 'refactor', 'chore'];
+  const types = [
+    'docs', 'feature', 'test', 'tests', 'fix', 'refactor', 'chore'
+  ];
   const errors = [];
 
   if (/^master|develop|renovate|dependabot/.test(branch)) {
