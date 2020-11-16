@@ -890,7 +890,7 @@
     "@octokit/types" "^5.0.0"
     prettier "^2.0.5"
 
-"@octokit/core@^3.1.0":
+"@octokit/core@^3.2.1":
   version "3.2.1"
   resolved "https://registry.yarnpkg.com/@octokit/core/-/core-3.2.1.tgz#9e04df3f4e7f825ac0559327490ce34299140af5"
   integrity sha512-XfFSDDwv6tclUenS0EmB6iA7u+4aOHBT1Lz4PtQNQQg3hBbNaR/+Uv5URU+egeIuuGAiMRiDyY92G4GBOWOqDA==
@@ -6161,12 +6161,12 @@ pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-probot@10.14.0:
-  version "10.14.0"
-  resolved "https://registry.yarnpkg.com/probot/-/probot-10.14.0.tgz#0f0ee621b7428b34b5898c8c79c394ebcb0d3c5a"
-  integrity sha512-nCsLiilJqdE/0GwWDWH/4pTMEgVJnGAqwVVO/9HIYhtl1p4YM1jUIsHCFks6Z6dBxQU/v4iDrYyxFgg2GwVwbQ==
+probot@10.14.1:
+  version "10.14.1"
+  resolved "https://registry.yarnpkg.com/probot/-/probot-10.14.1.tgz#e1e6ac421b42a8b57498b8ef550b68d8dd675c8a"
+  integrity sha512-ZzFZ+jS7w4NCNvFm8BX+a9rw8pRivi/+CMapJzptioxgm1GLiUwTPq5VquP7ig/1Z/fMMaZPAIFaRQrVtJY2QA==
   dependencies:
-    "@octokit/core" "^3.1.0"
+    "@octokit/core" "^3.2.1"
     "@octokit/graphql" "^4.2.0"
     "@octokit/plugin-enterprise-compatibility" "^1.2.1"
     "@octokit/plugin-paginate-rest" "^2.2.3"
