@@ -1088,6 +1088,14 @@
   dependencies:
     eslint-rule-composer "0.3.0"
 
+"@probot/get-private-key@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@probot/get-private-key/-/get-private-key-1.0.0.tgz#a947f3593797925f1d1dd78978f6900fe0d2828e"
+  integrity sha512-A4z3d2uqvJMZ1uME8vdKvuAae3bJc1F/IrVGzY72c/BSyCt2puEUMe2/wnJtOoLhhl+9NdMZPYCq3Vrfmu+SsQ==
+  dependencies:
+    "@types/is-base64" "^1.1.0"
+    is-base64 "^1.1.0"
+
 "@probot/octokit-plugin-config@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@probot/octokit-plugin-config/-/octokit-plugin-config-1.0.0.tgz#cd902786d2d4031b35a34ba54fa1a6aed03ef1c6"
@@ -1309,6 +1317,11 @@
   integrity sha512-hE9HUayptwyZRIhRM2FF4vDmond4Yxylpjpri0qBvs7Rw4tFJnM+fdb2PbpU+PKKkPuFBGKnkrGSgwqeUmCJ2Q==
   dependencies:
     "@types/node" "*"
+
+"@types/is-base64@^1.1.0":
+  version "1.1.0"
+  resolved "https://registry.yarnpkg.com/@types/is-base64/-/is-base64-1.1.0.tgz#8f0e0874ba0df223a413e46fa12e681708d19080"
+  integrity sha512-rigoMG77vfIXWjYUDBMPCY0qVzY1dGtEILSsjCcvDH/UgB2ENTZl0uKQknJq4W4nEUqVZqX0M9Uw/VRZ/vwzWQ==
 
 "@types/istanbul-lib-coverage@*", "@types/istanbul-lib-coverage@^2.0.0", "@types/istanbul-lib-coverage@^2.0.1":
   version "2.0.2"
@@ -6161,10 +6174,10 @@ pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-probot@10.14.1:
-  version "10.14.1"
-  resolved "https://registry.yarnpkg.com/probot/-/probot-10.14.1.tgz#e1e6ac421b42a8b57498b8ef550b68d8dd675c8a"
-  integrity sha512-ZzFZ+jS7w4NCNvFm8BX+a9rw8pRivi/+CMapJzptioxgm1GLiUwTPq5VquP7ig/1Z/fMMaZPAIFaRQrVtJY2QA==
+probot@10.16.0:
+  version "10.16.0"
+  resolved "https://registry.yarnpkg.com/probot/-/probot-10.16.0.tgz#cecba2451e10af2f003a19e000ee8a5d88e19724"
+  integrity sha512-LOg5gOBlBEqI33IA9G4SLiDC+a6yHLz+1fd3oeCYYNWI5est9gqrmuGD/KS7GBaY45PWsZPJLuXkX9HNptINMQ==
   dependencies:
     "@octokit/core" "^3.2.1"
     "@octokit/graphql" "^4.2.0"
@@ -6176,6 +6189,7 @@ probot@10.14.1:
     "@octokit/request" "^5.1.0"
     "@octokit/types" "^5.0.1"
     "@octokit/webhooks" "^7.15.0"
+    "@probot/get-private-key" "^1.0.0"
     "@probot/octokit-plugin-config" "^1.0.0"
     "@probot/pino" "^1.1.2"
     "@types/express" "^4.17.2"
