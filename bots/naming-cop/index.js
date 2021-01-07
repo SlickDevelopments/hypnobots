@@ -1,7 +1,7 @@
 const check = require('./naming-cop');
 const { normalizeIssue } = require('../utils');
 
-module.exports = ({ app }) => {
+module.exports = app => {
   app.on('pull_request.opened', check);
   app.on('pull_request.reopened', check);
   app.on('pull_request.edited', check);
@@ -18,7 +18,7 @@ module.exports = ({ app }) => {
     }
 
     if (comment !== null) {
-      await context.github.issues.createComment(normalizeIssue(comment));
+      await context.octokit.issues.createComment(normalizeIssue(comment));
     }
   });
 };

@@ -1,6 +1,6 @@
 const { normalizeIssue } = require('../utils');
 
-module.exports = ({ app }) => {
+module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     try {
       const { owner, repo, issue_number: number } = context.issue();
@@ -9,15 +9,15 @@ module.exports = ({ app }) => {
       const base = context.payload.pull_request.base.label;
 
       const compare = { owner, repo, base, head };
-      const { data } = await context.github.repos.compareCommits(compare);
+      const { data } = await context.octokit.repos.compareCommits(compare);
 
       if (data.behind_by > 0) {
-        await context.github.pulls.updateBranch(pull);
+        await context.octokit.pulls.updateBranch(pull);
       }
     } catch (e) {
       const response = `⚠️ Cannot update branch : ${e.message}`;
       const comment = context.issue({ body: response });
-      await context.github.issues.createComment(normalizeIssue(comment));
+      await context.octokit.issues.createComment(normalizeIssue(comment));
     }
   });
 };
