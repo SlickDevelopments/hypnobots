@@ -75,7 +75,7 @@ const checkBranch = async (context, report, branch) => {
 
 const checkCommits = async (context, rules, parser, report) => {
   const pull = context.pullRequest();
-  const { data } = await context.github.pulls.listCommits(normalizePR(pull));
+  const { data } = await context.octokit.pulls.listCommits(normalizePR(pull));
 
   for (const c of data) {
     const message = c.commit.message;
@@ -128,7 +128,7 @@ module.exports = async context => {
   if (report.length > 0) {
     let response = format(report);
     const issue = context.issue();
-    const { data } = await context.github.issues
+    const { data } = await context.octokit.issues
       .listComments(normalizeIssue(issue));
     let command = false;
     let found = false;
@@ -163,7 +163,7 @@ module.exports = async context => {
 
     if (response !== null) {
       const comment = context.issue({ body: response });
-      await context.github.issues.createComment(normalizeIssue(comment));
+      await context.octokit.issues.createComment(normalizeIssue(comment));
     }
   }
 };

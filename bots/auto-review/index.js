@@ -1,11 +1,11 @@
 const file = require('./file');
 const { getConfig, normalizeIssue } = require('../utils');
 
-module.exports = ({ app }) => {
+module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     const pull = context.issue();
     const repo = context.repo();
-    const { data } = await context.github.repos.listCollaborators(repo);
+    const { data } = await context.octokit.repos.listCollaborators(repo);
     const reviewers = [];
     const config = await getConfig(context, 'autoReview');
     let maxAssignees = 1;
@@ -34,10 +34,10 @@ module.exports = ({ app }) => {
         pull_number: pull.number,
         reviewers,
       };
-      context.github.pulls.requestReviewers(resquest);
+      context.octokit.pulls.requestReviewers(resquest);
     } else {
       const comment = context.issue({ body: 'Failed to find a reviewer ✖' });
-      context.github.issues.createComment(normalizeIssue(comment));
+      context.octokit.issues.createComment(normalizeIssue(comment));
     }
   });
 };

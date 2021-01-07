@@ -17,7 +17,7 @@ describe('Naming Cop Issue', () => {
 
   beforeEach(async () => {
     nock.disableNetConnect();
-    probot = new Probot({ id: 123, privateKey });
+    probot = new Probot({ appId: 123, privateKey });
     probot.load(bot);
   });
 
