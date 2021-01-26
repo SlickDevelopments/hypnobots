@@ -2,6 +2,14 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.3.3](https://github.com/p3ol/hypnobots/compare/v1.3.2...v1.3.3) (2021-01-26)
+
+
+### Bug Fixes
+
+* **deps:** update dependency probot to v11.0.3 ([02869bd](https://github.com/p3ol/hypnobots/commit/02869bd727cec0fb96a9323fadea2c986985f27f))
+* **deps:** update dependency probot to v11.0.5 ([af0c995](https://github.com/p3ol/hypnobots/commit/af0c995dc6fa3a4123b3bfcbb23f269ffbf234d6))
+
 ### [1.3.2](https://github.com/p3ol/hypnobots/compare/v1.3.1...v1.3.2) (2021-01-07)
 
 
