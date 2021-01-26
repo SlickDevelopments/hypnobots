@@ -6235,10 +6235,10 @@ pretty-format@^26.6.2:
     ansi-styles "^4.0.0"
     react-is "^17.0.1"
 
-probot@11.0.3:
-  version "11.0.3"
-  resolved "https://registry.yarnpkg.com/probot/-/probot-11.0.3.tgz#bebdd4f9f7425313e1d11e7705768872cb10e0f3"
-  integrity sha512-OycmKCKTKevkd/+BogUCGXafQ23wmzp0FQjAcz/CHSGZNWZvngW8IAx1StgWTYranjU2f1QYXnhz1Wa7i8BXmw==
+probot@11.0.5:
+  version "11.0.5"
+  resolved "https://registry.yarnpkg.com/probot/-/probot-11.0.5.tgz#c00a7c5fc0e57257e9aefa058436f38e6720c212"
+  integrity sha512-o8euQLHiJobgbKwbJb/1fg+ghC5Rf1gzSAk1qFH55tUhBkmTIxgVp1P21mkuFbyyTVlw9MZ0AwaVmdJJc6tpxQ==
   dependencies:
     "@octokit/core" "^3.2.4"
     "@octokit/plugin-enterprise-compatibility" "^1.2.8"
