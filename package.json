@@ -30,9 +30,9 @@
     "probot": "11.0.5"
   },
   "devDependencies": {
-    "@babel/core": "7.12.10",
-    "@babel/eslint-parser": "7.12.1",
-    "@babel/eslint-plugin": "7.12.1",
+    "@babel/core": "7.12.13",
+    "@babel/eslint-parser": "7.12.13",
+    "@babel/eslint-plugin": "7.12.13",
     "@poool/eslint-config": "1.4.2",
     "@poool/eslint-config-node": "1.4.2",
     "@poool/eslint-plugin": "1.4.2",
