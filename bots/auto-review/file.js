@@ -23,6 +23,7 @@ module.exports = async (context, path, reviewers, collabs, maxAssignees) => {
 
     for (const u of users) {
       const login = u[1].toLowerCase();
+
       if (
         !reviewers.includes(login) &&
         pull.owner.toLowerCase() !== login &&

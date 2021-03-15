@@ -31,5 +31,6 @@ module.exports = report => {
     message += error.warnings.map(w => `  - ⚠️ ${w.message}`).join('\n');
     message += '\n</details>\n';
   }
+
   return template.replace('<PLACEHOLDER>', message);
 };

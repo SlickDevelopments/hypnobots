@@ -1,5 +1,6 @@
 const { promises: fsp } = require('fs');
 const path = require('path');
+
 const nock = require('nock');
 const { Probot } = require('probot');
 
@@ -40,6 +41,7 @@ describe('Auto Update', () => {
     nock('https://api.github.com')
       .put('/repos/hiimbex/testing-things/pulls/1/update-branch', () => {
         fn();
+
         return true;
       })
       .reply(202);
@@ -66,6 +68,7 @@ describe('Auto Update', () => {
     nock('https://api.github.com')
       .put('/repos/hiimbex/testing-things/pulls/1/update-branch', () => {
         fn();
+
         return true;
       })
       .reply(202);
@@ -98,6 +101,7 @@ describe('Auto Update', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject({ body: commentBody });
+
         return true;
       })
       .reply(200);

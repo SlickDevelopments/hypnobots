@@ -101,6 +101,7 @@ const checkFiles = async (context, rules) => {
   if (config && config.validTypes) {
     rules['type-enum'][2] = config.validTypes;
   }
+
   if (config && config.ignoreList) {
     ignoreList = config.ignoreList;
   }
@@ -153,6 +154,7 @@ module.exports = async context => {
         if (response === comment.body) {
           response = null;
         }
+
         found = true;
       }
 

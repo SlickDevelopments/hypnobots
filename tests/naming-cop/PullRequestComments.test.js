@@ -1,5 +1,6 @@
 const { promises: fsp } = require('fs');
 const path = require('path');
+
 const nock = require('nock');
 const { Probot } = require('probot');
 
@@ -55,6 +56,7 @@ describe('Naming Cop Comments', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject(pullCreatedBody);
+
         return true;
       })
       .reply(200);
@@ -93,6 +95,7 @@ describe('Naming Cop Comments', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
         fn();
+
         return true;
       })
       .reply(200);
@@ -133,6 +136,7 @@ describe('Naming Cop Comments', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
         fn();
+
         return true;
       })
       .reply(200);
@@ -185,6 +189,7 @@ describe('Naming Cop Comments', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
         fn();
+
         return true;
       })
       .reply(200);

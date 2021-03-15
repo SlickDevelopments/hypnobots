@@ -1,5 +1,6 @@
 const fs = require('fs');
 const path = require('path');
+
 const nock = require('nock');
 const { Probot } = require('probot');
 
@@ -59,6 +60,7 @@ describe('Auto Review', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['bexhiim'] });
+
         return true;
       })
       .reply(201);
@@ -106,6 +108,7 @@ describe('Auto Review', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['bexhiim'] });
+
         return true;
       })
       .reply(201);
@@ -166,6 +169,7 @@ describe('Auto Review', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['notOwner', 'bexhiim'] });
+
         return true;
       })
       .reply(201);
@@ -210,6 +214,7 @@ describe('Auto Review', () => {
     nock('https://api.github.com')
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject({ body: 'Failed to find a reviewer ✖' });
+
         return true;
       })
       .reply(200);
