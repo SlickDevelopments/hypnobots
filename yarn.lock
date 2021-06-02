@@ -996,20 +996,20 @@
     aggregate-error "^3.1.0"
     debug "^4.0.0"
 
-"@poool/eslint-config-node@1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@poool/eslint-config-node/-/eslint-config-node-1.4.2.tgz#792aa81c605fa3eb16f666a84bf80ff3cb71743d"
-  integrity sha512-7VFyooQykTdmXoTPNOgd4kPHOvBrHoMlHG0zyvsK6fYBuMKbZoAMkkRTwx/dU8kp783l9U81YaoZ4UnnGy52Hg==
+"@poool/eslint-config-node@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@poool/eslint-config-node/-/eslint-config-node-1.5.0.tgz#f97da6a6b367fda01dd15290537518fd0b206d29"
+  integrity sha512-Dp9zk/biHq6VS6Vp7v2nDNpTXlJ308TGwgCsRQaDm4uOLZC7HVj+iV04r0WtYDdvW09V4gRmfvug/koqCYZSiw==
 
-"@poool/eslint-config@1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@poool/eslint-config/-/eslint-config-1.4.2.tgz#b43fc40ced332e3082571c343b35f90b8ca79792"
-  integrity sha512-kyMuTU+FllyqgVfZbXbfA0sO7RRrVeBl18xAxTaVBwFA0ENGr0tqDZsDLIBt5e+9z7OQ4b2svMwuwJA1mwxkJg==
+"@poool/eslint-config@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@poool/eslint-config/-/eslint-config-1.5.0.tgz#0498fb0a1925a027abb2e398db9ff9420b57d6b2"
+  integrity sha512-oWGb+k6Nk2/mY0993ui4pFCzW52y/rjMd0Gm4MXzVui7kUF+PRqjIpsvIPmW1QBoQVuQXVnsx/7MgZ+yiHk8Hg==
 
-"@poool/eslint-plugin@1.4.2":
-  version "1.4.2"
-  resolved "https://registry.yarnpkg.com/@poool/eslint-plugin/-/eslint-plugin-1.4.2.tgz#6428be4c8331e2f0b36d6d2efd93d28b4525ce07"
-  integrity sha512-NvTglKmbNrakfI60NJisS//vFlRcgC1yB3N9rdeDQoYR7tM1n6S51UsHwcBSe6wXdp5jinEnqAJ1hDBnM4loFA==
+"@poool/eslint-plugin@1.5.0":
+  version "1.5.0"
+  resolved "https://registry.yarnpkg.com/@poool/eslint-plugin/-/eslint-plugin-1.5.0.tgz#3632e138c24cb495af73dc3494d899622618be03"
+  integrity sha512-RZo6PzIWHF7KWL+aT4qmp2OOM0LSb/eMeZKPVBwgjNpOs42ZQIg2fLeRM7wx1hrBpFkLO+LgF6XLsE9EgoiAEg==
   dependencies:
     eslint-rule-composer "0.3.0"
 
