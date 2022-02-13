@@ -23,8 +23,8 @@
     "test": "./node_modules/.bin/jest"
   },
   "dependencies": {
-    "@commitlint/config-conventional": "16.0.0",
-    "@commitlint/core": "16.1.0",
+    "@commitlint/config-conventional": "16.2.1",
+    "@commitlint/core": "16.2.1",
     "conventional-changelog-conventionalcommits": "4.6.3",
     "dotenv": "14.3.2",
     "node-emoji": "1.11.0",
