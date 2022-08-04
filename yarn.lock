@@ -1114,20 +1114,20 @@
     "@octokit/webhooks-types" "4.0.2"
     aggregate-error "^3.1.0"
 
-"@poool/eslint-config-node@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@poool/eslint-config-node/-/eslint-config-node-1.5.0.tgz#f97da6a6b367fda01dd15290537518fd0b206d29"
-  integrity sha512-Dp9zk/biHq6VS6Vp7v2nDNpTXlJ308TGwgCsRQaDm4uOLZC7HVj+iV04r0WtYDdvW09V4gRmfvug/koqCYZSiw==
+"@poool/eslint-config-node@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@poool/eslint-config-node/-/eslint-config-node-1.5.2.tgz#0641ed772098915b3ffda5cecfd71d9fe16b7276"
+  integrity sha512-H1uCfEv+mDjjmZ+D+N4fmD7bftApDrObkaLM4GDmwQjzg786ohorF9jpSBbVgqbVDrrwELl1dIPLf0bSoywN2A==
 
-"@poool/eslint-config@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@poool/eslint-config/-/eslint-config-1.5.0.tgz#0498fb0a1925a027abb2e398db9ff9420b57d6b2"
-  integrity sha512-oWGb+k6Nk2/mY0993ui4pFCzW52y/rjMd0Gm4MXzVui7kUF+PRqjIpsvIPmW1QBoQVuQXVnsx/7MgZ+yiHk8Hg==
+"@poool/eslint-config@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@poool/eslint-config/-/eslint-config-1.5.2.tgz#2c451298301dffe61d3642d2488b7414aba53a5c"
+  integrity sha512-/LZuzVwJu/GuYR5nz6q40DTUwW6j/LLIMW0ArpJVVFGMChc8C5cxlW2G0uo5HIYeSzOmWWVa5S0fTY0F2ZdhqA==
 
-"@poool/eslint-plugin@1.5.0":
-  version "1.5.0"
-  resolved "https://registry.yarnpkg.com/@poool/eslint-plugin/-/eslint-plugin-1.5.0.tgz#3632e138c24cb495af73dc3494d899622618be03"
-  integrity sha512-RZo6PzIWHF7KWL+aT4qmp2OOM0LSb/eMeZKPVBwgjNpOs42ZQIg2fLeRM7wx1hrBpFkLO+LgF6XLsE9EgoiAEg==
+"@poool/eslint-plugin@1.5.2":
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/@poool/eslint-plugin/-/eslint-plugin-1.5.2.tgz#4bd6c9eaefb43d5e2522db9e33809bf418b05ac0"
+  integrity sha512-qwv0cS1Id4z8GP7OoRGUOI1o4sTGdNjRZ/ncTnPvcDFy9sFUAZkYkJG/GRZx+a2plruPbeVMhpf5gwdOD2hehA==
   dependencies:
     eslint-rule-composer "0.3.0"
 
