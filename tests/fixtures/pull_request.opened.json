@@ -9,10 +9,22 @@
     },
     "head": {
       "label": "hiimbex:dev",
-      "ref": "feature/testing"
+      "ref": "feature/testing",
+      "sha": "test",
+      "repo": {
+        "private": false,
+        "full_name": "hiimbex/testing-things",
+        "url": "https://api.github.com/repos/hiimbex/testing-things",
+        "name": "testing-things",
+        "blob_url": "https://api.github.com/repos/hiimbex/testing-things/tarball/feature/testing",
+        "private_blob_url": "https://me:test@api.github.com/repos/hiimbex/testing-things/tarball/feature/testing",
+        "api_blob_url": "https://me:test@api.github.com/repos/p3ol/api/tarball/feature/oui",
+        "id_blob_url": "https://me:test@api.github.com/repos/p3ol/id/tarball/feature/oui"  
+      }
     },
     "base": {
-      "label": "hiimbex:master"
+      "label": "hiimbex:master",
+      "ref": "master"
     },
     "owner": {
       "login": "hiimbex"
@@ -26,9 +38,15 @@
     "body": "not a link"
   },
   "repository": {
+    "private": false,
+    "full_name": "hiimbex/testing-things",
+    "url": "https://api.github.com/repos/hiimbex/testing-things",
     "name": "testing-things",
     "owner": {
       "login": "hiimbex"
-    }
+    },
+    "blob_url": "https://api.github.com/repos/hiimbex/testing-things/tarball/feature/testing",
+    "private_blob_url": "https://me:test@api.github.com/repos/hiimbex/testing-things/tarball/feature/testing",
+    "api_blob_url": "https://me:test@api.github.com/repos/p3ol/api/tarball/feature/oui"
   }
 }

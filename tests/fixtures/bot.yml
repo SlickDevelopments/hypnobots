@@ -1,0 +1,6 @@
+pipeline: test
+env:
+  CUSTOM_ENV_VAR: custom_value
+repos:
+  owner/another-repo:
+    CUSTOM_ENV_VAR: another_custom_value_{pr}
