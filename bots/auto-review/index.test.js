@@ -1,39 +1,28 @@
-const fs = require('fs');
-const path = require('path');
-
 const nock = require('nock');
-const { Probot } = require('probot');
+const { Probot, ProbotOctokit } = require('probot');
 
-const bot = require('../../bots/auto-review');
-const payload = require('../fixtures/pull_request.opened');
+const bot = require('./index');
+const payload = require('~fixtures/pull_request.opened');
 
-const fixturesDir = path.resolve('./tests/fixtures');
-
-describe('Auto Review', () => {
-  let probot, privateKey;
-
-  beforeAll(async () => {
-    privateKey = fs.readFileSync(path.join(fixturesDir, 'mock-cert.pem'));
-  });
+describe('auto-review', () => {
+  let probot;
 
   beforeEach(async () => {
     nock.disableNetConnect();
-    probot = new Probot({ appId: 123, privateKey });
+    probot = new Probot({
+      githubToken: 'test',
+      Octokit: ProbotOctokit.defaults({
+        retry: { enabled: false },
+        throttle: { enabled: false },
+      }),
+    });
     probot.load(bot);
   });
 
-  test('should send a pull request review request', async () => {
-
-    // Test that we correctly return a test token
-    nock('https://api.github.com')
-      .post('/app/installations/2/access_tokens')
-      .reply(200, { token: 'test' });
-
+  test('should add reviewers to a PR', async () => {
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.')
-      .reply(200, []);
-
-    nock('https://api.github.com')
+      .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
       .reply(200,
         [
@@ -49,15 +38,11 @@ describe('Auto Review', () => {
               admin: true,
             },
           }]
-      );
-
-    nock('https://api.github.com')
+      )
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
-        content: 'KiAgICAgICAgICAgICAgICAgQGhpaW1iZXg=', // *      @hiimbex
-      });
-
-    nock('https://api.github.com')
+        content: 'KiAgICAgICAgICAgICAgICAgQGhpaW1iZXg=', // @bexhiim
+      })
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['bexhiim'] });
 
@@ -65,22 +50,13 @@ describe('Auto Review', () => {
       })
       .reply(201);
 
-    // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
   });
 
-  test('should send a pull request review request 2', async () => {
-
-    // Test that we correctly return a test token
-    nock('https://api.github.com')
-      .post('/app/installations/2/access_tokens')
-      .reply(200, { token: 'test' });
-
+  test('should only add contributors as reviewers', async () => {
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.')
-      .reply(200, []);
-
-    nock('https://api.github.com')
+      .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
       .reply(200,
         [
@@ -97,15 +73,11 @@ describe('Auto Review', () => {
             },
           },
         ],
-      );
-
-    nock('https://api.github.com')
+      )
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
-        content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // *       @bexhiim @user
-      });
-
-    nock('https://api.github.com')
+        content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // @bexhiim @user
+      })
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['bexhiim'] });
 
@@ -113,29 +85,18 @@ describe('Auto Review', () => {
       })
       .reply(201);
 
-    // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
   });
 
   test('should send a pull request review request 3', async () => {
-
-    // Test that we correctly return a test token
-    nock('https://api.github.com')
-      .post('/app/installations/2/access_tokens')
-      .reply(200, { token: 'test' });
-
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.')
-      .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }]);
-
-    nock('https://api.github.com')
+      .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }])
       .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
       .reply(200, {
-        content: 'ewogICJhdXRvUmV2aWV3IjogewogICA' +
-                 'gIm1heEFzc2lnbmVlcyI6IDIKICB9Cn0=',
-      });
-
-    nock('https://api.github.com')
+        content:
+          'ewogICJhdXRvUmV2aWV3IjogewogICAgIm1heEFzc2lnbmVlcyI6IDIKICB9Cn0=',
+      })
       .get('/repos/hiimbex/testing-things/collaborators')
       .reply(200,
         [
@@ -158,15 +119,11 @@ describe('Auto Review', () => {
             },
           },
         ],
-      );
-
-    nock('https://api.github.com')
+      )
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
-        content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // *       @bexhiim @user
-      });
-
-    nock('https://api.github.com')
+        content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // @bexhiim @user
+      })
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['notOwner', 'bexhiim'] });
 
@@ -174,22 +131,13 @@ describe('Auto Review', () => {
       })
       .reply(201);
 
-    // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
   });
 
   test('should create a comment about failing', async () => {
-
-    // Test that we correctly return a test token
-    nock('https://api.github.com')
-      .post('/app/installations/2/access_tokens')
-      .reply(200, { token: 'test' });
-
     nock('https://api.github.com')
       .get('/repos/hiimbex/testing-things/contents/.')
-      .reply(200, []);
-
-    nock('https://api.github.com')
+      .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
       .reply(200,
         [
@@ -205,13 +153,9 @@ describe('Auto Review', () => {
               admin: false,
             },
           }],
-      );
-
-    nock('https://api.github.com')
+      )
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
-      .reply(404);
-
-    nock('https://api.github.com')
+      .reply(404)
       .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
         expect(body).toMatchObject({ body: 'Failed to find a reviewer ✖' });
 
@@ -219,7 +163,6 @@ describe('Auto Review', () => {
       })
       .reply(200);
 
-    // Receive a webhook event
     await probot.receive({ name: 'pull_request', payload });
   });
 

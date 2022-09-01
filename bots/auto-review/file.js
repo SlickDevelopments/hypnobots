@@ -6,7 +6,7 @@ module.exports = async (context, path, reviewers, collabs, maxAssignees) => {
   const args = {
     owner: pull.owner,
     repo: pull.repo,
-    path: path,
+    path,
   };
   let file = null;
 
