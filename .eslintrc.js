@@ -1,7 +1,7 @@
 module.exports = {
   extends: ['@poool/eslint-config-node'],
   overrides: [{
-    files: ['tests/**/*.js'],
+    files: ['**/*.test.js', 'tests/**/*.js'],
     env: {
       jest: true,
     },
