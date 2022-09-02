@@ -10,10 +10,8 @@
 | [auto-update](https://github.com/p3ol/hypnobots/tree/master/bots/auto-update) | Checks for changes from the default branch to automatically update branches with active pull requests | [install](https://github.com/apps/auto-update-cop) |
 | [naming-cop](https://github.com/p3ol/hypnobots/tree/master/bots/naming-cop) | PR checker that ensures the commit messages follow conventionalcommits.org style, as well as PR & branch titles | [install](https://github.com/apps/naming-cop) |
 | [repro-cop](https://github.com/p3ol/hypnobots/tree/master/bots/repro-cop) | Checks for any existing repro link in an issue and reminds user to create one | [install](https://github.com/apps/repro-cop) |
-
-## Contributing
-
-Please check the [CONTRIBUTING.md](https://github.com/p3ol/hypnobots/blob/master/CONTRIBUTING.md) doc for contribution guidelines.
+| [review-app-generator](https://github.com/p3ol/hypnobots/tree/master/bots/review-app-generator) | Automatically creates a review app on heroku for a PR | [install](https://github.com/apps/review-app-generator) |
+| [service-deploy-cop](https://github.com/p3ol/hypnobots/tree/master/bots/service-deploy-cop) | Checks commit history on a PR to determine services to redeploy | [install](https://github.com/apps/service-deploy-cop) |
 
 ## Development
 
@@ -44,17 +42,12 @@ And test your code:
 yarn test
 ```
 
+## Contributing
+
+[![](https://contrib.rocks/image?repo=p3ol/hypnobots)](https://github.com/p3ol/hypnobots/graphs/contributors)
+
+Please check the [CONTRIBUTING.md](https://github.com/p3ol/hypnobots/blob/master/CONTRIBUTING.md) doc for contribution guidelines.
+
 ## License
 
 This software is licensed under [MIT](https://github.com/p3ol/hypnobots/blob/master/LICENSE).
-
-## Contributors
-
-<!-- Contributors START
-Ugo_Stephant dackmin https://ugostephant.io doc tools
-Paul_Beauduc Acerlorion https://github.com/Acerlorion code
-<!-- Contributors END -->
-<!-- Contributors table START -->
-| <img src="https://avatars.githubusercontent.com/dackmin?s=100" width="100" alt="Ugo Stephant" /><br />[<sub>Ugo Stephant</sub>](https://github.com/dackmin)<br />[📖](https://github.com/p3ol/hypnobots/commits?author=dackmin) 🔧 | <img src="https://avatars.githubusercontent.com/Acerlorion?s=100" width="100" alt="Paul Beauduc" /><br />[<sub>Paul Beauduc</sub>](https://github.com/Acerlorion)<br />[💻](https://github.com/p3ol/hypnobots/commits?author=Acerlorion) |
-| :---: | :---: |
-<!-- Contributors table END -->
