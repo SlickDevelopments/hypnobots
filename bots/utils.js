@@ -11,12 +11,12 @@ const getConfig = async (context, bot) => {
   const args = { owner: pull.owner, repo: pull.repo, path: '.' };
   const accepted = ['.botsrc', '.botsrc.json'];
 
-  const dir = await context.octokit.repos.getContent(args);
-  const files = dir.data.filter(f => accepted.includes(f.name));
-
   let file;
 
   try {
+    const dir = await context.octokit.repos.getContent(args);
+    const files = dir.data.filter(f => accepted.includes(f.name));
+
     while (!file && files.length) {
       const { data } = await context.octokit.repos.getContent({
         ...args,
