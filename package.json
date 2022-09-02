@@ -28,6 +28,8 @@
     "@poool/junipero-utils": "2.0.0-rc.21",
     "conventional-changelog-conventionalcommits": "5.0.0",
     "dotenv": "16.0.2",
+    "heroku-client": "3.1.0",
+    "js-yaml": "4.1.0",
     "node-emoji": "1.11.0",
     "probot": "12.2.7"
   },
