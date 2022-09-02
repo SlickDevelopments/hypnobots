@@ -143,7 +143,8 @@ describe('auto-review', () => {
     await probot.receive({ name: 'pull_request', payload });
   });
 
-  test('should create a comment about failing', async () => {
+  test('should add reviewers even when no CODEOWNERS file is ' +
+    'found', async () => {
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' })
@@ -167,8 +168,8 @@ describe('auto-review', () => {
       )
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(404)
-      .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
-        expect(body).toMatchObject({ body: 'Failed to find a reviewer ✖' });
+      .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
+        expect(b).toMatchObject({ reviewers: ['bexhiim'] });
 
         return true;
       })

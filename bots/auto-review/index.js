@@ -17,7 +17,6 @@ module.exports = app => {
 
     for (const c of data) {
       if (
-        c.permissions.admin === true &&
         owner.toLowerCase() !== c.login.toLowerCase() &&
         !reviewers.includes(c.login.toLowerCase()) &&
         reviewers.length < maxAssignees
@@ -33,7 +32,7 @@ module.exports = app => {
         owner,
         repo: issueRepo,
         pull_number: pull.number,
-        reviewers,
+        reviewers: reviewers.filter(r => r !== owner),
       });
     } else {
       const comment = context.issue({ body: 'Failed to find a reviewer ✖' });
