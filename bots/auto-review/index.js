@@ -1,42 +1,59 @@
-const file = require('./file');
-const { getConfig, normalizeIssue } = require('../utils');
+const { getConfig, matchAll } = require('../utils');
 
 module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     const { pull_request: pull } = context.payload;
-    const { owner, repo: issueRepo } = context.issue();
-    const repo = context.repo();
-    const { data } = await context.octokit.repos.listCollaborators(repo);
-    const reviewers = [];
+    const { owner, repo } = context.issue();
     const config = await getConfig(context, 'autoReview');
-    let maxAssignees = 2;
+    const maxAssignees = config?.maxAssignees > 0 ? config.maxAssignees : 2;
 
-    if (config && config.maxAssignees && config.maxAssignees > 0) {
-      maxAssignees = config.maxAssignees;
-    }
+    const collaborators = [];
 
-    for (const c of data) {
-      if (
-        owner.toLowerCase() !== c.login.toLowerCase() &&
-        !reviewers.includes(c.login.toLowerCase()) &&
-        reviewers.length < maxAssignees
-      ) {
-        reviewers.push(c.login);
+    try {
+      const { data: collabs } = await context.octokit.rest.repos
+        .listCollaborators({ owner, repo });
+
+      for (const collab of collabs) {
+        collaborators.push(collab.login.toLowerCase());
       }
+    } catch (e) {
+      console.error(e);
+      context.log('could not get collaborators');
     }
 
-    await file(context, 'CODEOWNERS', reviewers, data, maxAssignees);
+    const owners = [];
+
+    try {
+      const file = await context.octokit.repos.getContent({
+        owner,
+        repo,
+        path: 'CODEOWNERS',
+      });
+      const content = Buffer
+        .from(file.data.content, 'base64').toString('ascii');
+
+      const users = matchAll(content, /@(\w*)/g);
+
+      for (const [_, user] of users) {
+        if (collaborators.includes(user.toLowerCase())) {
+          owners.push(user.toLowerCase());
+        }
+      }
+    } catch (e) {
+      context.log('could not read CODEOWNERS');
+    }
+
+    const reviewers = [...new Set(owners.length ? owners : collaborators)]
+      .filter(u => u !== owner.toLowerCase())
+      .slice(0, maxAssignees - 1);
 
     if (reviewers.length > 0) {
       context.octokit.pulls.requestReviewers({
         owner,
-        repo: issueRepo,
+        repo,
         pull_number: pull.number,
-        reviewers: reviewers.filter(r => r !== owner),
+        reviewers,
       });
-    } else {
-      const comment = context.issue({ body: 'Failed to find a reviewer ✖' });
-      context.octokit.issues.createComment(normalizeIssue(comment));
     }
   });
 };

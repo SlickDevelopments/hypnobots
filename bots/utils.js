@@ -9,46 +9,26 @@ const omit = (obj = {}, keys = []) =>
 const getConfig = async (context, bot) => {
   const pull = context.issue();
   const args = { owner: pull.owner, repo: pull.repo, path: '.' };
-  const files = ['.botsrc', '.botsrc.json'];
-  let dir = null;
-  let file = null;
+  const accepted = ['.botsrc', '.botsrc.json'];
+
+  const dir = await context.octokit.repos.getContent(args);
+  const files = dir.data.filter(f => accepted.includes(f.name));
+
+  let file;
 
   try {
-    dir = await context.octokit.repos.getContent(args);
+    while (!file && files.length) {
+      const { data } = await context.octokit.repos.getContent({
+        ...args,
+        path: files.shift()?.name,
+      });
+
+      file = Buffer.from(data.content, 'base64').toString('ascii');
+    }
+
+    return JSON.parse(file)[bot];
   } catch (e) {
-    dir = null;
-  }
-
-  if (dir === null) {
     return null;
-  }
-
-  for (const f of dir.data) {
-    if (files.includes(f.name)) {
-      args.path = f.path;
-    }
-  }
-
-  if (args.path !== '.') {
-    try {
-      file = await context.octokit.repos.getContent(args);
-    } catch (e) {
-      file = null;
-    }
-  }
-
-  if (file !== null) {
-    const buff = Buffer.from(file.data.content, 'base64');
-    const content = buff.toString('ascii');
-    let config = null;
-
-    try {
-      config = JSON.parse(content);
-    } catch (e) {
-      config = null;
-    }
-
-    return config ? config[bot] : null;
   }
 };
 

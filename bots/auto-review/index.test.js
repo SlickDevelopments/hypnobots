@@ -22,31 +22,21 @@ describe('auto-review', () => {
     probot.load(bot);
   });
 
-  test('should add reviewers to a PR', async () => {
+  test('should only add CODEOWNERS as reviewers to a PR', async () => {
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' })
-      .get('/repos/hiimbex/testing-things/contents/.')
+      .get('/repos/hiimbex/testing-things/contents/')
       .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
-      .reply(200,
-        [
-          {
-            login: 'hiimbex',
-            permissions: {
-              admin: true,
-            },
-          },
-          {
-            login: 'bexhiim',
-            permissions: {
-              admin: true,
-            },
-          }]
-      )
+      .query(true)
+      .reply(200, [
+        { login: 'hiimbex' },
+        { login: 'bexhiim' },
+      ])
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
-        content: 'KiAgICAgICAgICAgICAgICAgQGhpaW1iZXg=', // @bexhiim
+        content: 'QGJleGhpaW0=', // @bexhiim
       })
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
         expect(b).toMatchObject({ reviewers: ['bexhiim'] });
@@ -58,29 +48,17 @@ describe('auto-review', () => {
     await probot.receive({ name: 'pull_request', payload });
   });
 
-  test('should only add contributors as reviewers', async () => {
+  test('should only add existing contributors as reviewers', async () => {
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' })
-      .get('/repos/hiimbex/testing-things/contents/.')
+      .get('/repos/hiimbex/testing-things/contents/')
       .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
-      .reply(200,
-        [
-          {
-            login: 'hiimbex',
-            permissions: {
-              admin: true,
-            },
-          },
-          {
-            login: 'bexhiim',
-            permissions: {
-              admin: false,
-            },
-          },
-        ],
-      )
+      .reply(200, [
+        { login: 'hiimbex' },
+        { login: 'bexhiim' },
+      ])
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
         content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // @bexhiim @user
@@ -95,46 +73,29 @@ describe('auto-review', () => {
     await probot.receive({ name: 'pull_request', payload });
   });
 
-  test('should send a pull request review request 3', async () => {
+  test('should allow to set maxAssignees from config file', async () => {
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' })
-      .get('/repos/hiimbex/testing-things/contents/.')
+      .get('/repos/hiimbex/testing-things/contents/')
       .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }])
       .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
       .reply(200, {
         content:
-          'ewogICJhdXRvUmV2aWV3IjogewogICAgIm1heEFzc2lnbmVlcyI6IDIKICB9Cn0=',
+          'ewogICJhdXRvUmV2aWV3IjogewogICAgIm1heEFzc2lnbmVlcyI6IDEKICB9Cn0=',
       })
       .get('/repos/hiimbex/testing-things/collaborators')
-      .reply(200,
-        [
-          {
-            login: 'notOwner',
-            permissions: {
-              admin: true,
-            },
-          },
-          {
-            login: 'bexhiim',
-            permissions: {
-              admin: true,
-            },
-          },
-          {
-            login: 'another',
-            permissions: {
-              admin: true,
-            },
-          },
-        ],
-      )
+      .reply(200, [
+        { login: 'notOwner' },
+        { login: 'bexhiim' },
+        { login: 'user' },
+      ])
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(200, {
         content: 'KiAgICAgICAgQGJleGhpaW0gQHVzZXI=', // @bexhiim @user
       })
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
-        expect(b).toMatchObject({ reviewers: ['notOwner', 'bexhiim'] });
+        expect(b).toMatchObject({ reviewers: ['user'] });
 
         return true;
       })
@@ -148,24 +109,13 @@ describe('auto-review', () => {
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' })
-      .get('/repos/hiimbex/testing-things/contents/.')
+      .get('/repos/hiimbex/testing-things/contents/')
       .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
-      .reply(200,
-        [
-          {
-            login: 'hiimbex',
-            permissions: {
-              admin: true,
-            },
-          },
-          {
-            login: 'bexhiim',
-            permissions: {
-              admin: false,
-            },
-          }],
-      )
+      .reply(200, [
+        { login: 'hiimbex' },
+        { login: 'bexhiim' },
+      ])
       .get('/repos/hiimbex/testing-things/contents/CODEOWNERS')
       .reply(404)
       .post('/repos/hiimbex/testing-things/pulls/1/requested_reviewers', b => {
