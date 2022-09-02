@@ -11,10 +11,13 @@ module.exports = app => {
     const payload = context.payload;
     let comment = null;
 
-    if (payload.comment.body === '@naming-cop stfu') {
-      comment = context.issue({ body: 'Okay I will now shut up.' });
-    } else if (payload.comment.body === '@naming-cop activate') {
-      comment = context.issue({ body: 'Yay I can speak.' });
+    switch (payload.comment.body) {
+      case '@naming-cop stfu':
+        comment = context.issue({ body: 'Okay I will now shut up.' });
+        break;
+      case '@naming-cop activate':
+        comment = context.issue({ body: 'Yay I can speak.' });
+        break;
     }
 
     if (comment !== null) {

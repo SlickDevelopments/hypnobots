@@ -86,7 +86,7 @@ const checkCommits = async (context, rules, parser, report) => {
     }
 
     report.push({
-      message: message,
+      message,
       type: 'commit',
       id: c.sha,
       errors,
@@ -127,44 +127,16 @@ module.exports = async context => {
   }
 
   if (report.length > 0) {
-    let response = format(report);
     const issue = context.issue();
     const { data } = await context.octokit.issues
       .listComments(normalizeIssue(issue));
-    let command = false;
-    let found = false;
 
-    for (const comment of data.reverse()) {
+    const latestComment = data.reverse()
+      .find(c => /^@naming-cop (stfu|activate)$/.test(c.body));
+    const canTalk = !latestComment || /activate/.test(latestComment.body);
 
-      if (
-        command === false &&
-        comment.body === '@naming-cop stfu'
-      ) {
-        response = null;
-        command = true;
-      } else if (
-        command === false &&
-        found === false &&
-        comment.body === '@naming-cop activate'
-      ) {
-        command = true;
-      }
-
-      if (found === false && comment.user.login === 'naming-cop[bot]') {
-        if (response === comment.body) {
-          response = null;
-        }
-
-        found = true;
-      }
-
-      if (found === true && command === true) {
-        break;
-      }
-    }
-
-    if (response !== null) {
-      const comment = context.issue({ body: response });
+    if (canTalk) {
+      const comment = context.issue({ body: format(report) });
       await context.octokit.issues.createComment(normalizeIssue(comment));
     }
   }
