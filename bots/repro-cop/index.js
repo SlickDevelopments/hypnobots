@@ -1,8 +1,7 @@
 const { matchAll, normalizeIssue } = require('../utils');
 
 const domains = ['jsbin', 'jsfiddle', 'plnkr', 'codepen'];
-const body = `
-Hi!
+const body = `Hi!
 
 Thank you for reporting this issue. It appears you did not attach any repro link to it.
 The fastest way for us to investigate and resolve this issue is to create a repro of the actual bug.

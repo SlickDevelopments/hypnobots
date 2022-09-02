@@ -24,6 +24,7 @@ describe('Auto Update', () => {
         retry: { enabled: false },
         throttle: { enabled: false },
       }),
+      logLevel: false,
     });
     probot.load(bot);
   });
@@ -32,6 +33,8 @@ describe('Auto Update', () => {
     const fn = jest.fn();
 
     nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' })
       .get(
         '/repos/hiimbex/testing-things/compare/' +
         encodeURIComponent('hiimbex:master...hiimbex:dev')
@@ -52,6 +55,8 @@ describe('Auto Update', () => {
     const fn = jest.fn();
 
     nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' })
       .get(
         '/repos/hiimbex/testing-things/compare/' +
         encodeURIComponent('hiimbex:master...hiimbex:dev')

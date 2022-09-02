@@ -16,7 +16,8 @@ describe('review-app-generator', () => {
     nock.disableNetConnect();
     botConfig = fs.readFileSync(require.resolve('~fixtures/bot.yml'));
     probot = new Probot({
-      githubToken: 'test',
+      appId: 123,
+      privateKey: fs.readFileSync(require.resolve('~fixtures/mock-cert.pem')),
       Octokit: ProbotOctokit.defaults({
         retry: { enabled: false },
         throttle: { enabled: false },
@@ -30,6 +31,8 @@ describe('review-app-generator', () => {
 
     test('should create a review app when a pr is opened', async () => {
       nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
         .get('/repos/hiimbex/testing-things/contents/.github%2Fbot.yml')
         .query(true)
         .reply(200, { content: botConfig.toString('base64') })
@@ -64,13 +67,15 @@ describe('review-app-generator', () => {
       pr.pull_request.head.ref = 'develop';
 
       const mock = nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
         .get('/repos/hiimbex/testing-things/contents/.github%2Fbot.yml')
         .query(true)
         .reply(200, { content: botConfig.toString('base64') });
 
       await probot.receive({ name: 'pull_request', payload: pr });
       expect(mock.isDone()).toBe(false);
-      expect(nock.pendingMocks()).toHaveLength(1);
+      expect(mock.pendingMocks()).toHaveLength(2);
     });
   });
 
@@ -80,6 +85,8 @@ describe('review-app-generator', () => {
 
     test('should delete a review app when a PR is closed', async () => {
       nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
         .get('/repos/hiimbex/testing-things/contents/.github%2Fbot.yml')
         .query(true)
         .reply(200, { content: botConfig.toString('base64') });
@@ -101,9 +108,10 @@ describe('review-app-generator', () => {
 
       test('should delete then recreate a review app', async () => {
         nock('https://api.github.com')
+          .post('/app/installations/2/access_tokens')
+          .reply(200, { token: 'test' })
           .get('/repos/hiimbex/testing-things/contents/.github%2Fbot.yml')
           .query(true)
-          .times(2)
           .reply(200, { content: botConfig.toString('base64') })
           .get('/repos/hiimbex/testing-things/pulls/1')
           .reply(200, pullRequest.pull_request)
@@ -151,9 +159,10 @@ describe('review-app-generator', () => {
 
       test('should delete then recreate a review app', async () => {
         nock('https://api.github.com')
+          .post('/app/installations/2/access_tokens')
+          .reply(200, { token: 'test' })
           .get('/repos/hiimbex/testing-things/contents/.github%2Fbot.yml')
           .query(true)
-          .times(2)
           .reply(200, { content: botConfig.toString('base64') })
           .get('/repos/hiimbex/testing-things/pulls/1')
           .reply(200, pullRequest.pull_request)

@@ -1,3 +1,5 @@
+const fs = require('fs');
+
 const nock = require('nock');
 const { Probot, ProbotOctokit } = require('probot');
 
@@ -10,7 +12,8 @@ describe('auto-review', () => {
   beforeEach(async () => {
     nock.disableNetConnect();
     probot = new Probot({
-      githubToken: 'test',
+      appId: 123,
+      privateKey: fs.readFileSync(require.resolve('~fixtures/mock-cert.pem')),
       Octokit: ProbotOctokit.defaults({
         retry: { enabled: false },
         throttle: { enabled: false },
@@ -21,6 +24,8 @@ describe('auto-review', () => {
 
   test('should add reviewers to a PR', async () => {
     nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' })
       .get('/repos/hiimbex/testing-things/contents/.')
       .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
@@ -55,6 +60,8 @@ describe('auto-review', () => {
 
   test('should only add contributors as reviewers', async () => {
     nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' })
       .get('/repos/hiimbex/testing-things/contents/.')
       .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
@@ -90,6 +97,8 @@ describe('auto-review', () => {
 
   test('should send a pull request review request 3', async () => {
     nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' })
       .get('/repos/hiimbex/testing-things/contents/.')
       .reply(200, [{ name: '.botsrc.json', path: '.botsrc.json' }])
       .get('/repos/hiimbex/testing-things/contents/.botsrc.json')
@@ -136,6 +145,8 @@ describe('auto-review', () => {
 
   test('should create a comment about failing', async () => {
     nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' })
       .get('/repos/hiimbex/testing-things/contents/.')
       .reply(200, [])
       .get('/repos/hiimbex/testing-things/collaborators')
