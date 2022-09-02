@@ -4,3 +4,6 @@ env:
 repos:
   owner/another-repo:
     CUSTOM_ENV_VAR: another_custom_value_{pr}
+services:
+  - dashboard
+  - auth
