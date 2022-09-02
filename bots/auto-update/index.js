@@ -1,7 +1,12 @@
 const { normalizeIssue } = require('../utils');
 
 module.exports = app => {
-  app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
+  app.on([
+    'pull_request.opened',
+    'pull_request.reopened',
+    'pull_request.synchronize',
+    'pull_request.edited',
+  ], async context => {
     try {
       const { owner, repo, issue_number: number } = context.issue();
       const pull = { owner, repo, pull_number: number };
