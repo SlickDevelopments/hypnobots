@@ -68,7 +68,7 @@ const getCustomRelatedEnvironment = async (context, config) => {
 
     if (repoName && prNumber && config.repos?.[repoName]) {
       Object.entries(config.repos[repoName] || {}).forEach(([key, value]) => {
-        env[key] = value.replace('{pr}', prNumber);
+        env[key] = value?.replace?.('{pr}', prNumber) || value;
       });
     }
   }
@@ -84,7 +84,7 @@ const getEnv = async (context, config) => {
     .concat(Object.entries(config.env || {}))
     .concat(Object.entries(customEnv || {}))
     .reduce((res, [key, value]) => {
-      res[key] = value.replace('{pr}', pullRequest.number);
+      res[key] = value?.replace?.('{pr}', pullRequest.number) || value;
 
       return res;
     }, {});
