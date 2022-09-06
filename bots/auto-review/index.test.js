@@ -2,10 +2,10 @@ const fs = require('fs');
 
 const nock = require('nock');
 const { Probot, ProbotOctokit } = require('probot');
+const { cloneDeep } = require('@poool/junipero-utils');
 
 const bot = require('./index');
 const payload = require('~fixtures/pull_request.opened');
-const { cloneDeep } = require('@poool/junipero-utils');
 
 describe('auto-review', () => {
   let probot;
