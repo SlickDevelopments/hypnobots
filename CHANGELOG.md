@@ -2,6 +2,64 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.0.0](https://github.com/p3ol/hypnobots/compare/v1.3.4...v2.0.0) (2022-09-06)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove node 10 support
+
+### Features
+
+* add new bot from standalone repo ([e0c940c](https://github.com/p3ol/hypnobots/commit/e0c940c4f14db976393f77175401a3a71e1483ed))
+* **service-deploy-cop:** add new bot ([b33f742](https://github.com/p3ol/hypnobots/commit/b33f74270df1a3038494c5afef8ccbfee2943d79))
+
+
+### Bug Fixes
+
+* **auto-review:** avoid failing when only PR owner is found ([18ea5ac](https://github.com/p3ol/hypnobots/commit/18ea5aceba627cdc09747f4fb3c1415d6f89b14b))
+* **auto-review:** ignore bot branches ([7f33527](https://github.com/p3ol/hypnobots/commit/7f33527e87d5f53cecca484358aae6b243e431dc))
+* **auto-review:** refactor a lot of useless code ([589ff48](https://github.com/p3ol/hypnobots/commit/589ff48bc5e7bf6d4a5d9aa3a9f66d3fe17280fd))
+* **auto-review:** various issues ([6e674a0](https://github.com/p3ol/hypnobots/commit/6e674a0ac8efb98f9283a608968e7e6709ca17b0))
+* **auto-update:** trigger on base updates too ([dca74ec](https://github.com/p3ol/hypnobots/commit/dca74ecf15b53d6dd85a37710870d7ae3e975b6c))
+* **auto-update:** various issues ([825a758](https://github.com/p3ol/hypnobots/commit/825a758afbd9d0b0b914b828ce08958983924ba3))
+* **deps:** update commitlint monorepo ([212f26e](https://github.com/p3ol/hypnobots/commit/212f26e1900d8d2cb6365c2ac5035d78a290f93a))
+* **deps:** update commitlint monorepo to v12 ([657607b](https://github.com/p3ol/hypnobots/commit/657607b83d406cde06dd9d7b04a2dc4ef0f47961))
+* **deps:** update commitlint monorepo to v12.1.1 ([eb293bf](https://github.com/p3ol/hypnobots/commit/eb293bfa92e6a521b11e90182836ea517e765d45))
+* **deps:** update commitlint monorepo to v12.1.4 ([54409f6](https://github.com/p3ol/hypnobots/commit/54409f6850a34335665696e9deea0fe98aab7ac4))
+* **deps:** update commitlint monorepo to v13 ([19e1bf3](https://github.com/p3ol/hypnobots/commit/19e1bf3686c728669e8bd8b99bb1fb150b8d1f1a))
+* **deps:** update commitlint monorepo to v14 ([30d928e](https://github.com/p3ol/hypnobots/commit/30d928e5a9b4f01a0c166d508576b86b344b0f55))
+* **deps:** update commitlint monorepo to v15 ([0659257](https://github.com/p3ol/hypnobots/commit/06592574d82dc39086dfa01b36123b5a4929f982))
+* **deps:** update commitlint monorepo to v16 ([ff15cda](https://github.com/p3ol/hypnobots/commit/ff15cda051b091e6db716cf8d2f956d384fc5db3))
+* **deps:** update commitlint monorepo to v16.2.1 ([130a048](https://github.com/p3ol/hypnobots/commit/130a048d32e927d5e8147452d2fbd8b529d4052e))
+* **deps:** update dependency @commitlint/core to v13.2.1 ([ce42144](https://github.com/p3ol/hypnobots/commit/ce421446dc9cc666ede50da5321cf8a84faf44f8))
+* **deps:** update dependency @commitlint/core to v16.1.0 ([0911962](https://github.com/p3ol/hypnobots/commit/0911962cd84b432f8d99b567cae3d1d3f10d29f3))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v4.6.0 ([acde051](https://github.com/p3ol/hypnobots/commit/acde05194fcc9e3dd9a306a4fdbeb5b7064b1d8a))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v4.6.1 ([39595cd](https://github.com/p3ol/hypnobots/commit/39595cd69307c10d4c78dd23a588b33a594b197f))
+* **deps:** update dependency conventional-changelog-conventionalcommits to v4.6.3 ([ccb05d0](https://github.com/p3ol/hypnobots/commit/ccb05d032afdff16ffd9cfe374a978eb4f2169d7))
+* **deps:** update dependency dotenv to v10 ([d06eb53](https://github.com/p3ol/hypnobots/commit/d06eb53883d0e191d4eb41e1dc7e471f261fa467))
+* **deps:** update dependency dotenv to v14 ([b48fe5b](https://github.com/p3ol/hypnobots/commit/b48fe5b1dfeba20fc5b52cba94897a29b0f2ad94))
+* **deps:** update dependency dotenv to v14.3.2 ([f122350](https://github.com/p3ol/hypnobots/commit/f122350a7f29841c873e4da828bc9c5da0d3b72b))
+* **deps:** update dependency dotenv to v16 ([9a0ae00](https://github.com/p3ol/hypnobots/commit/9a0ae00249e5c07a461ba547ba8d34857c50a1a3))
+* **deps:** update dependency dotenv to v16.0.1 ([af8a230](https://github.com/p3ol/hypnobots/commit/af8a230dec10eac48c7665bab6187c00d2bf5abc))
+* **deps:** update dependency node-emoji to v1.11.0 ([5bea65b](https://github.com/p3ol/hypnobots/commit/5bea65bf7b5de6f5f62973b3c3109578440d870d))
+* **deps:** update dependency probot to v11.1.0 ([4300f33](https://github.com/p3ol/hypnobots/commit/4300f33606f61df46ee66d464bf73751b0c76fe6))
+* **deps:** update dependency probot to v11.4.0 ([b56fd61](https://github.com/p3ol/hypnobots/commit/b56fd61586042bad3a68dc0d7e19e7941b1bebfb))
+* **deps:** update dependency probot to v11.4.1 ([f4d7fee](https://github.com/p3ol/hypnobots/commit/f4d7fee1ec61549f1a9aad7e22e4a729bb73ea1e))
+* **deps:** update dependency probot to v12 ([bb17c55](https://github.com/p3ol/hypnobots/commit/bb17c5552daf1d0527f0acb8ba887db6b04749ec))
+* **deps:** update dependency probot to v12.1.1 ([667b496](https://github.com/p3ol/hypnobots/commit/667b496c9fa1a2450ea4bfaf6a111e80983de7b6))
+* **deps:** update dependency probot to v12.1.2 ([d56c83a](https://github.com/p3ol/hypnobots/commit/d56c83aa5227c96720cde18119d5021d6ce9406f))
+* **deps:** update dependency probot to v12.1.3 ([3334902](https://github.com/p3ol/hypnobots/commit/3334902e320abbe1bfa9a021c1659d59d3ba1e68))
+* **deps:** update dependency probot to v12.1.4 ([078240e](https://github.com/p3ol/hypnobots/commit/078240e429704ede9fda95fdffc7d7b5ec9a642b))
+* **deps:** update dependency probot to v12.2.0 ([611b3ef](https://github.com/p3ol/hypnobots/commit/611b3ef13e988c638a0dd58ca52ebc813467a02b))
+* **deps:** update dependency probot to v12.2.1 ([112688a](https://github.com/p3ol/hypnobots/commit/112688ab24f3eeb4897415a621573568cf0398aa))
+* **deps:** update dependency probot to v12.2.4 ([5366a1c](https://github.com/p3ol/hypnobots/commit/5366a1cdf48925a20d696ba9098de11b5034edd3))
+* **naming-cop:** various issues ([10d863c](https://github.com/p3ol/hypnobots/commit/10d863cb247c8c68515f7b8843d0b4413bb73c65))
+* **review-app-generator:** avoid replacing on undefined ([437a601](https://github.com/p3ol/hypnobots/commit/437a6016febe95ee5c306ac6ac7aec5623475936))
+
+
+* remove node 10 support ([5fb949c](https://github.com/p3ol/hypnobots/commit/5fb949c5b4edd552ab7763c1f968abfe75072433))
+
 ### [1.3.4](https://github.com/p3ol/hypnobots/compare/v1.3.3...v1.3.4) (2021-02-05)
 
 
