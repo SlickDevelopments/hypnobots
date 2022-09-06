@@ -137,7 +137,7 @@ describe('auto-review', () => {
     nock('https://api.github.com')
       .post('/app/installations/2/access_tokens')
       .reply(200, { token: 'test' })
-      .get('/repos/hiimbex/testing-things/contents', b => {
+      .get('/repos/hiimbex/testing-things/contents', () => {
         fn();
 
         return true;
