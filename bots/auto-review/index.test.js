@@ -5,6 +5,7 @@ const { Probot, ProbotOctokit } = require('probot');
 
 const bot = require('./index');
 const payload = require('~fixtures/pull_request.opened');
+const { cloneDeep } = require('@poool/junipero-utils');
 
 describe('auto-review', () => {
   let probot;
@@ -126,6 +127,24 @@ describe('auto-review', () => {
       .reply(200);
 
     await probot.receive({ name: 'pull_request', payload });
+  });
+
+  test('should do nothing when branch should be ignored', async () => {
+    const fn = jest.fn();
+    const pr = cloneDeep(payload);
+    pr.pull_request.head.ref = 'renovate/jest-monorepo';
+
+    nock('https://api.github.com')
+      .post('/app/installations/2/access_tokens')
+      .reply(200, { token: 'test' })
+      .get('/repos/hiimbex/testing-things/contents', b => {
+        fn();
+
+        return true;
+      });
+
+    await probot.receive({ name: 'pull_request', payload: pr });
+    expect(fn).not.toHaveBeenCalled();
   });
 
   afterEach(() => {

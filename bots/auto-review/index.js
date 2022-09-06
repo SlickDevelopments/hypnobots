@@ -1,12 +1,21 @@
 const { getConfig, matchAll } = require('../utils');
 
+const shouldIgnoreBranch = branch =>
+  /^master|develop|renovate|dependabot/.test(branch);
+
 module.exports = app => {
   app.on(['pull_request.opened', 'pull_request.reopened'], async context => {
     const { pull_request: pull } = context.payload;
     const { owner, repo } = context.issue();
+
+    if (shouldIgnoreBranch(pull.head.ref)) {
+      context.log('ignoring branch');
+
+      return;
+    }
+
     const config = await getConfig(context, 'autoReview');
     const maxAssignees = config?.maxAssignees > 0 ? config.maxAssignees : 2;
-
     const collaborators = [];
 
     try {
