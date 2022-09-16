@@ -80,7 +80,7 @@ const checkBranch = async (context, report, branch) => {
 
   errors.push({
     message: !type
-      ? 'branch name was not recognized as type/name'
+      ? 'branch name was not recognized as <type>/<name>'
       : 'type should be [docs, feature, test, tests, fix, refactor, chore]',
   });
 
@@ -95,22 +95,42 @@ const checkBranch = async (context, report, branch) => {
 
 const checkCommits = async (context, rules, parser, report) => {
   const pull = context.pullRequest();
+  const prTitle = strip(pull.title);
   const { data } = await context.octokit.pulls.listCommits(normalizePR(pull));
 
   for (const c of data) {
+    const errors = [];
+    const warnings = [];
     const message = c.commit.message;
-    const { valid, errors, warnings } = await lint(message, rules, parser);
+    const linter = await lint(message, rules, parser);
 
-    if (valid && warnings.length === 0) {
-      continue;
+    if (!linter.valid || linter.warnings.length > 0) {
+      errors.push(...linter.errors);
+      warnings.push(...linter.warnings);
     }
 
+    if (errors.length > 0 || warnings.length > 0) {
+      report.push({
+        message,
+        type: 'commit',
+        id: c.sha,
+        errors,
+        warnings,
+      });
+    }
+  }
+
+  if (
+    /^fix/.test(prTitle) &&
+    data.some(c => /^feature|feat/.test(c.commit.message))
+  ) {
     report.push({
-      message,
-      type: 'commit',
-      id: c.sha,
-      errors,
-      warnings,
+      message: prTitle,
+      type: 'title',
+      id: pull.number,
+      errors: [{
+        message: '<feat> commits should not be present inside a <fix> PR',
+      }],
     });
   }
 };

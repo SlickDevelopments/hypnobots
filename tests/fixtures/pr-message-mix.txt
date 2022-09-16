@@ -2,10 +2,10 @@
 I've found one or more issues in this PR:
 
 
-`illname` (branch)
+`🐛 fix: change oui` (#1)
 <details>
 
-  - ❌ branch name was not recognized as <type>/<name>
+  - ❌ <feat> commits should not be present inside a <fix> PR
 </details>
 
 

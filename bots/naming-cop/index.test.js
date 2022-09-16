@@ -25,6 +25,9 @@ describe('Naming Cop', () => {
       badPRType: fs
         .readFileSync(require.resolve('~fixtures/pr-message-type.txt'),
           'utf-8'),
+      badPRMix: fs
+        .readFileSync(require.resolve('~fixtures/pr-message-mix.txt'),
+          'utf-8'),
       customConfig: fs
         .readFileSync(require.resolve('~fixtures/pr-message-custom.txt'),
           'utf-8'),
@@ -514,6 +517,54 @@ describe('Naming Cop', () => {
         .reply(200);
 
       await probot.receive({ name: 'pull_request', payload: pr });
+    });
+
+    test('should not allow to mix feat commits with fix PRs', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '🐛 fix: change things';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [{ commit: { message: 'feat(test): message' }, sha: '1' }])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+          expect(body).toMatchObject({ body: messages.badPRMix });
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+    });
+
+    test('should allow to mix fix commits with feat PRs', async () => {
+      const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '✨ feat: change things';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [{ commit: { message: 'fix(test): message' }, sha: '1' }])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+      expect(fn).not.toHaveBeenCalled();
     });
   });
 
