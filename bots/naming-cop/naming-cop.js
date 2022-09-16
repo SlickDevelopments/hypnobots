@@ -4,6 +4,7 @@ const { strip, replace, get } = require('node-emoji');
 const commitlintConfig = require('./commitlint.config');
 const format = require('./format');
 const { getConfig, normalizeIssue, normalizePR } = require('../utils');
+const { createCheck, completeCheck } = require('./utils');
 
 const ignored = ['renovate', 'dependabot'];
 const emojis = {
@@ -170,6 +171,8 @@ module.exports = async context => {
     rules['type-enum'][2] = config.validTypes;
   }
 
+  const checkRun = await createCheck(context);
+
   await checkTitle(context, rules, parserPreset, report);
   await checkBranch(context, report, branch);
   await checkCommits(context, rules, parserPreset, report);
@@ -188,4 +191,6 @@ module.exports = async context => {
       await context.octokit.issues.createComment(normalizeIssue(comment));
     }
   }
+
+  await completeCheck(context, checkRun, report);
 };

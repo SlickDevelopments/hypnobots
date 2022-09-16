@@ -48,6 +48,27 @@ describe('Naming Cop', () => {
       }),
     });
     probot.load(bot);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/check-runs')
+      .reply(200, () => ({
+        id: 123,
+        head_sha: 'abc123',
+      }))
+      .patch('/repos/hiimbex/testing-things/check-runs/123', body => {
+        expect(body).toMatchObject({
+          status: 'completed',
+          output: {
+            title: 'Naming Cop Test Results',
+          },
+        });
+
+        return true;
+      })
+      .reply(200, () => ({
+        id: 123,
+        head_sha: 'abc123',
+      }));
   });
 
   describe('issue_comment.created', () => {
