@@ -117,7 +117,7 @@ const checkBranch = async (context, report, branch) => {
 
 const checkCommits = async (context, rules, parser, report) => {
   const pull = context.pullRequest();
-  const prTitle = strip(pull.title);
+  const prTitle = strip(context.payload.pull_request.title);
   const { data } = await context.octokit.pulls.listCommits(normalizePR(pull));
 
   for (const c of data) {
@@ -154,9 +154,9 @@ const checkCommits = async (context, rules, parser, report) => {
     data.some(c => /^feat/.test(c.commit.message))
   ) {
     report.push({
-      message: prTitle,
+      message: context.payload.pull_request.title,
       type: 'title',
-      id: pull.number,
+      id: context.payload.pull_request.number,
       errors: [{
         message: '<feat> commits should not be present inside a <fix> PR',
       }],

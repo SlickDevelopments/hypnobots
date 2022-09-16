@@ -27,8 +27,8 @@ module.exports = report => {
     }
 
     message += '<details>\n\n';
-    message += error.errors.map(e => `  - ❌ ${e.message}`).join('\n');
-    message += error.warnings.map(w => `  - ⚠️ ${w.message}`).join('\n');
+    message += (error.errors || []).map(e => `  - ❌ ${e.message}`).join('\n');
+    message += (error.warnings || []).map(w => `  - ⚠️ ${w.message}`).join('\n');
     message += '\n</details>\n';
   }
 
