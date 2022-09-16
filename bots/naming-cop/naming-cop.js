@@ -90,15 +90,18 @@ const checkBranch = async (context, report, branch) => {
   const regex = /^(\w*)\/(\w*-?)*$/;
   const [_, type = ''] = branch.match(regex) || [];
 
-  if (types.includes(type)) {
-    return;
+  if (!type) {
+    errors.push({
+      message: 'branch name was not recognized as [type]/[name]',
+    });
   }
 
-  errors.push({
-    message: !type
-      ? 'branch name was not recognized as <type>/<name>'
-      : 'type should be [docs, feature, test, tests, fix, refactor, chore]',
-  });
+  if (!types.includes(type)) {
+    errors.push({
+      message: 'type should be [docs, feature, test, tests, fix, refactor, ' +
+        'chore]',
+    });
+  }
 
   if (!isBranchValid(branch.split('/').slice(1).join('/'))) {
     errors.push({
@@ -106,13 +109,15 @@ const checkBranch = async (context, report, branch) => {
     });
   }
 
-  report.push({
-    message: '',
-    type: 'branch',
-    id: branch,
-    errors,
-    warnings: [],
-  });
+  if (errors.length > 0) {
+    report.push({
+      message: '',
+      type: 'branch',
+      id: branch,
+      errors,
+      warnings: [],
+    });
+  }
 };
 
 const checkCommits = async (context, rules, parser, report) => {
@@ -158,7 +163,7 @@ const checkCommits = async (context, rules, parser, report) => {
       type: 'title',
       id: context.payload.pull_request.number,
       errors: [{
-        message: '<feat> commits should not be present inside a <fix> PR',
+        message: '`feat` commits should not be present inside a `fix` PR',
       }],
     });
   }
