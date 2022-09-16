@@ -1,0 +1,44 @@
+
+I've found one or more issues in this PR:
+
+
+`✨ feat(stuff_to_change): change things` (#1)
+<details>
+
+  - ❌ PR subject should not contain special chars other than `-`
+</details>
+
+`fix(bad.subject): message` (2)
+<details>
+
+  - ❌ commit subject should not contain special chars other than `-`
+</details>
+
+`fix(bad|subject): message` (3)
+<details>
+
+  - ❌ commit subject should not contain special chars other than `-`
+</details>
+
+`fix(bad(subject): message` (4)
+<details>
+
+  - ❌ commit subject should not contain special chars other than `-`
+</details>
+
+`fix(bad)subject): message` (5)
+<details>
+
+  - ❌ commit subject should not contain special chars other than `-`
+</details>
+
+`fix(bad_subject): message` (6)
+<details>
+
+  - ❌ commit subject should not contain special chars other than `-`
+</details>
+
+
+--------
+
+Happy coding!

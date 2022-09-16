@@ -18,6 +18,12 @@ const emojis = {
 const shouldBeIgnored = (name = '', context) =>
   (context.config?.ignoreList || ignored).some(b => new RegExp(b).test(name));
 
+const isSubjectValid = name => {
+  const subject = /^(?:\w+)\((.+)\):/gm.exec(name)?.[1];
+
+  return !subject || /^[a-zA-Z0-9-]*$/.test(subject);
+};
+
 const checkTitle = async (context, rules, parser, report) => {
   const pull = context.payload.pull_request;
   const clean = strip(pull.title);
@@ -48,6 +54,12 @@ const checkTitle = async (context, rules, parser, report) => {
   if (!linter.valid || linter.warnings.length > 0) {
     errors.push(...linter.errors);
     warnings.push(...linter.warnings);
+  }
+
+  if (!isSubjectValid(clean)) {
+    errors.push({
+      message: 'PR subject should not contain special chars other than `-`',
+    });
   }
 
   if (errors.length > 0 || warnings.length > 0) {
@@ -107,6 +119,13 @@ const checkCommits = async (context, rules, parser, report) => {
     if (!linter.valid || linter.warnings.length > 0) {
       errors.push(...linter.errors);
       warnings.push(...linter.warnings);
+    }
+
+    if (!isSubjectValid(message)) {
+      errors.push({
+        message: 'commit subject should not contain special chars other ' +
+          'than `-`',
+      });
     }
 
     if (errors.length > 0 || warnings.length > 0) {

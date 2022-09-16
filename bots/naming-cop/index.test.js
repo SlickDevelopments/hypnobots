@@ -28,6 +28,9 @@ describe('Naming Cop', () => {
       badPRMix: fs
         .readFileSync(require.resolve('~fixtures/pr-message-mix.txt'),
           'utf-8'),
+      badPRSubject: fs
+        .readFileSync(require.resolve('~fixtures/pr-message-subject.txt'),
+          'utf-8'),
       customConfig: fs
         .readFileSync(require.resolve('~fixtures/pr-message-custom.txt'),
           'utf-8'),
@@ -565,6 +568,38 @@ describe('Naming Cop', () => {
 
       await probot.receive({ name: 'pull_request', payload: pr });
       expect(fn).not.toHaveBeenCalled();
+    });
+
+    test('should not allow weird PR or commit subjects', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '✨ feat(stuff_to_change): change things';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [
+          { commit: { message: 'fix(test): message' }, sha: '1' },
+          { commit: { message: 'fix(bad.subject): message' }, sha: '2' },
+          { commit: { message: 'fix(bad|subject): message' }, sha: '3' },
+          { commit: { message: 'fix(bad(subject): message' }, sha: '4' },
+          { commit: { message: 'fix(bad)subject): message' }, sha: '5' },
+          { commit: { message: 'fix(bad_subject): message' }, sha: '6' },
+          { commit: { message: 'fix(good-subject): message' }, sha: '7' },
+          { commit: { message: 'fix: message' }, sha: '8' },
+        ])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+          expect(body).toMatchObject({ body: messages.badPRSubject });
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
     });
   });
 
