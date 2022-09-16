@@ -594,6 +594,7 @@ describe('Naming Cop', () => {
     test('should not allow weird PR or commit subjects', async () => {
       const pr = cloneDeep(payload);
       pr.pull_request.title = '✨ feat(stuff_to_change): change things';
+      pr.pull_request.head.ref = 'feat/stuff_to_change';
 
       nock('https://api.github.com')
         .post('/app/installations/2/access_tokens')

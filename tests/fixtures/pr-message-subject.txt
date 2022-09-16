@@ -8,6 +8,13 @@ I've found one or more issues in this PR:
   - ❌ PR subject should not contain special chars other than `-`
 </details>
 
+`feat/stuff_to_change` (branch)
+<details>
+
+  - ❌ type should be [docs, feature, test, tests, fix, refactor, chore]
+  - ❌ branch name should not contain special chars other than `-`
+</details>
+
 `fix(bad.subject): message` (2)
 <details>
 

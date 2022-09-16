@@ -25,6 +25,9 @@ const isSubjectValid = name => {
   return !subject || /^[a-zA-Z0-9-]*$/.test(subject);
 };
 
+const isBranchValid = name =>
+  /^[a-zA-Z0-9-]*$/.test(name);
+
 const checkTitle = async (context, rules, parser, report) => {
   const pull = context.payload.pull_request;
   const clean = strip(pull.title);
@@ -96,6 +99,12 @@ const checkBranch = async (context, report, branch) => {
       ? 'branch name was not recognized as <type>/<name>'
       : 'type should be [docs, feature, test, tests, fix, refactor, chore]',
   });
+
+  if (!isBranchValid(branch.split('/').slice(1).join('/'))) {
+    errors.push({
+      message: 'branch name should not contain special chars other than `-`',
+    });
+  }
 
   report.push({
     message: '',
