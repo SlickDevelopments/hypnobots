@@ -4,7 +4,7 @@ const createCheck = context =>
     repo: context.repo().repo,
     name: 'Naming Cop',
     status: 'queued',
-    started_at: Date.now(),
+    started_at: new Date(),
     head_sha: context.payload.pull_request.head.sha,
     output: {
       title: 'Queuing Naming Cop Test...',
@@ -20,6 +20,7 @@ const completeCheck = (context, check, reports) =>
     status: 'completed',
     head_sha: context.payload.pull_request.head.sha,
     conclusion: reports.length > 0 ? 'failure' : 'success',
+    completed_at: new Date(),
     output: {
       title: 'Naming Cop Test Results',
       summary: reports.length > 0
