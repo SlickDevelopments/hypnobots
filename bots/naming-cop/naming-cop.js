@@ -142,7 +142,7 @@ const checkCommits = async (context, rules, parser, report) => {
 
   if (
     /^fix/.test(prTitle) &&
-    data.some(c => /^feature|feat/.test(c.commit.message))
+    data.some(c => /^feat/.test(c.commit.message))
   ) {
     report.push({
       message: prTitle,
