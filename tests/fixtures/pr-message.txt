@@ -5,7 +5,8 @@ I've found one or more issues in this PR:
 `📦 oui: change oui` (#1)
 <details>
 
-  - ❌ type must be one of [chore, docs, feat, feature, fix, refactor, test, tests, deploy, release]
+  - ❌ 📦 emoji should only be used with: chore
+  - ❌ type must be one of [chore, docs, feat, fix, refactor, test, tests, release]
 </details>
 
 

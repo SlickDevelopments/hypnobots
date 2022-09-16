@@ -1,0 +1,14 @@
+
+I've found one or more issues in this PR:
+
+
+`✨ chore: change things` (#1)
+<details>
+
+  - ❌ ✨ emoji should only be used with: feat, release
+</details>
+
+
+--------
+
+Happy coding!

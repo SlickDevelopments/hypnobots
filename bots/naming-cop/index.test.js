@@ -22,6 +22,9 @@ describe('Naming Cop', () => {
       badPREmoji: fs
         .readFileSync(require.resolve('~fixtures/pr-message-emoji.txt'),
           'utf-8'),
+      badPRType: fs
+        .readFileSync(require.resolve('~fixtures/pr-message-type.txt'),
+          'utf-8'),
       customConfig: fs
         .readFileSync(require.resolve('~fixtures/pr-message-custom.txt'),
           'utf-8'),
@@ -399,9 +402,7 @@ describe('Naming Cop', () => {
           '/repos/hiimbex/testing-things/contents/' +
           encodeURIComponent('.botsrc.json')
         )
-        .reply(200, {
-          content: 'ewogICJuYW1pbmdDb3AiOiB7C',
-        })
+        .reply(200, { content: 'ewogICJuYW1pbmdDb3AiOiB7C' })
         .get('/repos/hiimbex/testing-things/pulls/1/commits')
         .reply(200, [])
         .get('/repos/hiimbex/testing-things/issues/1/comments')
@@ -419,6 +420,9 @@ describe('Naming Cop', () => {
 
     test('should create a comment when a pull request is opened ' +
       'and type is missing', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '📦 oui: change oui';
+
       nock('https://api.github.com')
         .post('/app/installations/2/access_tokens')
         .reply(200, { token: 'test' })
@@ -435,12 +439,14 @@ describe('Naming Cop', () => {
         })
         .reply(200);
 
-      payload.pull_request.title = '📦 oui: change oui';
-      await probot.receive({ name: 'pull_request', payload });
+      await probot.receive({ name: 'pull_request', payload: pr });
     });
 
     test('should create a comment when a pull request is opened ' +
          'and emoji isn\'t recognized', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '🎉 chore: change things';
+
       nock('https://api.github.com')
         .post('/app/installations/2/access_tokens')
         .reply(200, { token: 'test' })
@@ -457,13 +463,14 @@ describe('Naming Cop', () => {
         })
         .reply(200);
 
-      payload.pull_request.title = '🎉 chore: change things';
-      await probot.receive({ name: 'pull_request', payload });
+      await probot.receive({ name: 'pull_request', payload: pr });
     });
 
     test('should not create a comment when a pull request is opened ' +
       'and its title is not ill-formed', async () => {
       const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '📦 chore: change things';
 
       nock('https://api.github.com')
         .post('/app/installations/2/access_tokens')
@@ -481,9 +488,32 @@ describe('Naming Cop', () => {
         })
         .reply(200);
 
-      payload.pull_request.title = '📦 chore: change things';
-      await probot.receive({ name: 'pull_request', payload });
+      await probot.receive({ name: 'pull_request', payload: pr });
       expect(fn).not.toHaveBeenCalled();
+    });
+
+    test('should not allow to use emoji not corresponding to type in PR ' +
+      'title', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '✨ chore: change things';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+          expect(body).toMatchObject({ body: messages.badPRType });
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
     });
   });
 

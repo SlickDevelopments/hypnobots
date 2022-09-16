@@ -1,44 +1,64 @@
 const { lint, load } = require('@commitlint/core');
-const { strip, replace } = require('node-emoji');
+const { strip, replace, get } = require('node-emoji');
 
-const config = require('./commitlint.config');
+const commitlintConfig = require('./commitlint.config');
 const format = require('./format');
 const { getConfig, normalizeIssue, normalizePR } = require('../utils');
 
-const emojis = [
-  'sparkles',
-  'bug',
-  'recycle',
-  'building_construction',
-  'package',
-  'open_book',
-];
-let ignoreList = ['renovate[bot]', 'dependabot[bot]'];
+const ignored = ['renovate', 'dependabot'];
+const emojis = {
+  sparkles: ['feat', 'release'],
+  bug: 'fix',
+  recycle: 'refactor',
+  building_construction: ['test', 'tests'],
+  package: 'chore',
+  open_book: 'docs',
+};
+
+const shouldBeIgnored = (name = '', context) =>
+  (context.config?.ignoreList || ignored).some(b => new RegExp(b).test(name));
 
 const checkTitle = async (context, rules, parser, report) => {
   const pull = context.payload.pull_request;
   const clean = strip(pull.title);
   const emoji = replace(Array.from(pull.title)[0], e => `${e.key}`);
-  const { valid, errors, warnings } = await lint(clean, rules, parser);
+  const linter = await lint(clean, rules, parser);
+  const errors = [];
+  const warnings = [];
 
-  if (
-    (pull.user && ignoreList.includes(pull.user.login)) ||
-    (valid && warnings.length === 0 && emojis.includes(emoji))
-  ) {
+  if (shouldBeIgnored(context, pull.user?.login)) {
     return;
-  } else if (!emojis.includes(emoji)) {
+  }
+
+  if (!Object.keys(emojis).includes(emoji)) {
     errors.push({
       message: 'emoji should be [✨, 🐛, ♻️, 🏗, 📦, 📖]',
     });
   }
 
-  report.push({
-    message: pull.title,
-    type: 'title',
-    id: pull.number,
-    errors,
-    warnings,
-  });
+  const types = [].concat(emojis[emoji] || []);
+
+  if (types.length && !types.some(e => new RegExp(e).test(clean))) {
+    errors.push({
+      message: get(emoji) +
+        ' emoji should only be used with: ' + types.join(', '),
+    });
+  }
+
+  if (!linter.valid || linter.warnings.length > 0) {
+    errors.push(...linter.errors);
+    warnings.push(...linter.warnings);
+  }
+
+  if (errors.length > 0 || warnings.length > 0) {
+    report.push({
+      message: pull.title,
+      type: 'title',
+      id: pull.number,
+      errors,
+      warnings,
+    });
+  }
 };
 
 const checkBranch = async (context, report, branch) => {
@@ -47,7 +67,7 @@ const checkBranch = async (context, report, branch) => {
   ];
   const errors = [];
 
-  if (/^master|develop|renovate|dependabot/.test(branch)) {
+  if (shouldBeIgnored(context, branch)) {
     return;
   }
 
@@ -95,36 +115,25 @@ const checkCommits = async (context, rules, parser, report) => {
   }
 };
 
-const checkFiles = async (context, rules) => {
+module.exports = async context => {
+  const { parserPreset, rules } = await load(commitlintConfig);
+  const report = [];
+  const branch = context.payload.pull_request.head.ref;
+
   const config = await getConfig(context, 'namingCop');
+  context.config = config;
+
+  if (shouldBeIgnored(context, branch)) {
+    return;
+  }
 
   if (config && config.validTypes) {
     rules['type-enum'][2] = config.validTypes;
   }
 
-  if (config && config.ignoreList) {
-    ignoreList = config.ignoreList;
-  }
-};
-
-module.exports = async context => {
-  const { parserPreset, rules } = await load(config);
-  const report = [];
-  const branch = context.payload.pull_request.head.ref;
-  const ignoreListRef = ignoreList;
-
-  if (/^renovate/.test(branch)) {
-    return;
-  }
-
-  await checkFiles(context, rules);
   await checkTitle(context, rules, parserPreset, report);
   await checkBranch(context, report, branch);
   await checkCommits(context, rules, parserPreset, report);
-
-  if (ignoreList !== ignoreListRef) {
-    ignoreList = ignoreListRef;
-  }
 
   if (report.length > 0) {
     const issue = context.issue();
