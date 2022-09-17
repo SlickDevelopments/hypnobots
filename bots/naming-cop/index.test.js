@@ -623,6 +623,64 @@ describe('Naming Cop', () => {
 
       await probot.receive({ name: 'pull_request', payload: pr });
     });
+
+    test('should not be triggered for ignored authors', async () => {
+      const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.user.login = 'dependabot[bot]';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+      expect(fn).not.toHaveBeenCalled();
+    });
+
+    test('should not be triggered for ignored branches', async () => {
+      const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.head.ref = 'renovate/jest-monorepo';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+      expect(fn).not.toHaveBeenCalled();
+    });
   });
 
   afterEach(() => {

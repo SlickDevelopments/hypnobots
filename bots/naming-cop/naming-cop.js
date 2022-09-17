@@ -16,7 +16,7 @@ const emojis = {
   open_book: 'docs',
 };
 
-const shouldBeIgnored = (name = '', context) =>
+const shouldBeIgnored = (context, name = '') =>
   (context.config?.ignoreList || ignored).some(b => new RegExp(b).test(name));
 
 const isSubjectValid = name => {
@@ -35,10 +35,6 @@ const checkTitle = async (context, rules, parser, report) => {
   const linter = await lint(clean, rules, parser);
   const errors = [];
   const warnings = [];
-
-  if (shouldBeIgnored(context, pull.user?.login)) {
-    return;
-  }
 
   if (!Object.keys(emojis).includes(emoji)) {
     errors.push({
@@ -82,11 +78,6 @@ const checkBranch = async (context, report, branch) => {
     'docs', 'feature', 'test', 'tests', 'fix', 'refactor', 'chore',
   ];
   const errors = [];
-
-  if (shouldBeIgnored(context, branch)) {
-    return;
-  }
-
   const regex = /^(\w*)\/(\w*-?)*$/;
   const [_, type = ''] = branch.match(regex) || [];
 
@@ -177,7 +168,10 @@ module.exports = async context => {
   const config = await getConfig(context, 'namingCop');
   context.config = config;
 
-  if (shouldBeIgnored(context, branch)) {
+  if (
+    shouldBeIgnored(context, branch) ||
+    shouldBeIgnored(context, context.payload.pull_request.user.login)
+  ) {
     return;
   }
 
