@@ -5,7 +5,8 @@ I've found one or more issues in this PR:
 `illname` (branch)
 <details>
 
-  - ❌ branch name was not recognized as type/name
+  - ❌ branch name was not recognized as [type]/[name]
+  - ❌ type should be [docs, feature, test, tests, fix, refactor, chore]
 </details>
 
 

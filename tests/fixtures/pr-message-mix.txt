@@ -1,0 +1,14 @@
+
+I've found one or more issues in this PR:
+
+
+`🐛 fix: change things` (#1)
+<details>
+
+  - ❌ `feat` commits should not be present inside a `fix` PR
+</details>
+
+
+--------
+
+Happy coding!
