@@ -2,6 +2,27 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [2.1.0](https://github.com/p3ol/hypnobots/compare/v2.0.0...v2.1.0) (2022-09-19)
+
+
+### Features
+
+* **naming-cop:** add pr check when naming cop runs ([8f5e6f9](https://github.com/p3ol/hypnobots/commit/8f5e6f91620130314671fed96b97ae0d4582ffac))
+* **naming-cop:** disallow bad pr & commits subjects ([24a7f8e](https://github.com/p3ol/hypnobots/commit/24a7f8e55a54704312fce3020259a0c06b81cf1d))
+* **naming-cop:** disallow to use wrong emoji ([c1b0b54](https://github.com/p3ol/hypnobots/commit/c1b0b547bc3c2580df5e25e6f5bfd34b69dd69db))
+* **naming-cop:** prevent feat commits inside fix PRs ([1bfcc53](https://github.com/p3ol/hypnobots/commit/1bfcc530d4fad87d4682f609f2db774c24a9eb10))
+
+
+### Bug Fixes
+
+* **deps:** update dependency probot to v12.2.8 ([a6fd29f](https://github.com/p3ol/hypnobots/commit/a6fd29ff420d16e6cd91802fe8a8954ff6f18a1b))
+* **naming-cop:** also filter bad branch names correctly ([94a503f](https://github.com/p3ol/hypnobots/commit/94a503feb8e7ceb132ce81830e2f990a95b6070b))
+* **naming-cop:** bad date format ([6f0762c](https://github.com/p3ol/hypnobots/commit/6f0762cac9471a92fe2dbe5445cdec947e666d36))
+* **naming-cop:** correctly check branches ([e67a3da](https://github.com/p3ol/hypnobots/commit/e67a3daf19e7cdd7b6fc24fa33d55d82c12c929e))
+* **naming-cop:** correctly handle bad pr commit mixes ([2722f3b](https://github.com/p3ol/hypnobots/commit/2722f3beb6a9d50be65a49e000e848a6622d267a))
+* **naming-cop:** correctly identify bots to avoid flooding ([69216d7](https://github.com/p3ol/hypnobots/commit/69216d75ff960c88b63baf021b997caf19e97fca))
+* **naming-cop:** only allow feat commits ([fd6b69b](https://github.com/p3ol/hypnobots/commit/fd6b69b7a567e07161c61f531fb0ccf92ada57af))
+
 ## [2.0.0](https://github.com/p3ol/hypnobots/compare/v1.3.4...v2.0.0) (2022-09-06)
 
 
