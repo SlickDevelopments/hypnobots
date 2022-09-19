@@ -22,6 +22,15 @@ describe('Naming Cop', () => {
       badPREmoji: fs
         .readFileSync(require.resolve('~fixtures/pr-message-emoji.txt'),
           'utf-8'),
+      badPRType: fs
+        .readFileSync(require.resolve('~fixtures/pr-message-type.txt'),
+          'utf-8'),
+      badPRMix: fs
+        .readFileSync(require.resolve('~fixtures/pr-message-mix.txt'),
+          'utf-8'),
+      badPRSubject: fs
+        .readFileSync(require.resolve('~fixtures/pr-message-subject.txt'),
+          'utf-8'),
       customConfig: fs
         .readFileSync(require.resolve('~fixtures/pr-message-custom.txt'),
           'utf-8'),
@@ -39,6 +48,27 @@ describe('Naming Cop', () => {
       }),
     });
     probot.load(bot);
+
+    nock('https://api.github.com')
+      .post('/repos/hiimbex/testing-things/check-runs')
+      .reply(200, () => ({
+        id: 123,
+        head_sha: 'abc123',
+      }))
+      .patch('/repos/hiimbex/testing-things/check-runs/123', body => {
+        expect(body).toMatchObject({
+          status: 'completed',
+          output: {
+            title: 'Naming Cop Test Results',
+          },
+        });
+
+        return true;
+      })
+      .reply(200, () => ({
+        id: 123,
+        head_sha: 'abc123',
+      }));
   });
 
   describe('issue_comment.created', () => {
@@ -399,9 +429,7 @@ describe('Naming Cop', () => {
           '/repos/hiimbex/testing-things/contents/' +
           encodeURIComponent('.botsrc.json')
         )
-        .reply(200, {
-          content: 'ewogICJuYW1pbmdDb3AiOiB7C',
-        })
+        .reply(200, { content: 'ewogICJuYW1pbmdDb3AiOiB7C' })
         .get('/repos/hiimbex/testing-things/pulls/1/commits')
         .reply(200, [])
         .get('/repos/hiimbex/testing-things/issues/1/comments')
@@ -419,6 +447,9 @@ describe('Naming Cop', () => {
 
     test('should create a comment when a pull request is opened ' +
       'and type is missing', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '📦 oui: change oui';
+
       nock('https://api.github.com')
         .post('/app/installations/2/access_tokens')
         .reply(200, { token: 'test' })
@@ -435,12 +466,14 @@ describe('Naming Cop', () => {
         })
         .reply(200);
 
-      payload.pull_request.title = '📦 oui: change oui';
-      await probot.receive({ name: 'pull_request', payload });
+      await probot.receive({ name: 'pull_request', payload: pr });
     });
 
     test('should create a comment when a pull request is opened ' +
          'and emoji isn\'t recognized', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '🎉 chore: change things';
+
       nock('https://api.github.com')
         .post('/app/installations/2/access_tokens')
         .reply(200, { token: 'test' })
@@ -457,13 +490,14 @@ describe('Naming Cop', () => {
         })
         .reply(200);
 
-      payload.pull_request.title = '🎉 chore: change things';
-      await probot.receive({ name: 'pull_request', payload });
+      await probot.receive({ name: 'pull_request', payload: pr });
     });
 
     test('should not create a comment when a pull request is opened ' +
       'and its title is not ill-formed', async () => {
       const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '📦 chore: change things';
 
       nock('https://api.github.com')
         .post('/app/installations/2/access_tokens')
@@ -481,8 +515,170 @@ describe('Naming Cop', () => {
         })
         .reply(200);
 
-      payload.pull_request.title = '📦 chore: change things';
-      await probot.receive({ name: 'pull_request', payload });
+      await probot.receive({ name: 'pull_request', payload: pr });
+      expect(fn).not.toHaveBeenCalled();
+    });
+
+    test('should not allow to use emoji not corresponding to type in PR ' +
+      'title', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '✨ chore: change things';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+          expect(body).toMatchObject({ body: messages.badPRType });
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+    });
+
+    test('should not allow to mix feat commits with fix PRs', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '🐛 fix: change things';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [{ commit: { message: 'feat(test): message' }, sha: '1' }])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+          expect(body).toMatchObject({ body: messages.badPRMix });
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+    });
+
+    test('should allow to mix fix commits with feat PRs', async () => {
+      const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '✨ feat: change things';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [{ commit: { message: 'fix(test): message' }, sha: '1' }])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+      expect(fn).not.toHaveBeenCalled();
+    });
+
+    test('should not allow weird PR or commit subjects', async () => {
+      const pr = cloneDeep(payload);
+      pr.pull_request.title = '✨ feat(stuff_to_change): change things';
+      pr.pull_request.head.ref = 'feat/stuff_to_change';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits')
+        .reply(200, [
+          { commit: { message: 'fix(test): message' }, sha: '1' },
+          { commit: { message: 'fix(bad.subject): message' }, sha: '2' },
+          { commit: { message: 'fix(bad|subject): message' }, sha: '3' },
+          { commit: { message: 'fix(bad(subject): message' }, sha: '4' },
+          { commit: { message: 'fix(bad)subject): message' }, sha: '5' },
+          { commit: { message: 'fix(bad_subject): message' }, sha: '6' },
+          { commit: { message: 'fix(good-subject): message' }, sha: '7' },
+          { commit: { message: 'fix: message' }, sha: '8' },
+        ])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', body => {
+          expect(body).toMatchObject({ body: messages.badPRSubject });
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+    });
+
+    test('should not be triggered for ignored authors', async () => {
+      const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.user.login = 'dependabot[bot]';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
+      expect(fn).not.toHaveBeenCalled();
+    });
+
+    test('should not be triggered for ignored branches', async () => {
+      const fn = jest.fn();
+      const pr = cloneDeep(payload);
+      pr.pull_request.head.ref = 'renovate/jest-monorepo';
+
+      nock('https://api.github.com')
+        .post('/app/installations/2/access_tokens')
+        .reply(200, { token: 'test' })
+        .get('/repos/hiimbex/testing-things/contents/')
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/pulls/1/commits', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200, [])
+        .get('/repos/hiimbex/testing-things/issues/1/comments')
+        .reply(200, [])
+        .post('/repos/hiimbex/testing-things/issues/1/comments', () => {
+          fn();
+
+          return true;
+        })
+        .reply(200);
+
+      await probot.receive({ name: 'pull_request', payload: pr });
       expect(fn).not.toHaveBeenCalled();
     });
   });
