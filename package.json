@@ -1,6 +1,6 @@
 {
   "name": "@poool/hypnobots",
-  "version": "2.1.0",
+  "version": "2.1.1",
   "private": true,
   "description": "🤖￼ Repo automation bots for noobs",
   "author": "Ugo Stephant <ugo@poool.fr>",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@commitlint/config-conventional": "17.1.0",
     "@commitlint/core": "17.1.2",
-    "@poool/junipero-utils": "2.0.0-rc.21",
+    "@poool/junipero-utils": "2.0.0-rc.22",
     "conventional-changelog-conventionalcommits": "5.0.0",
     "dotenv": "16.0.3",
     "heroku-client": "3.1.0",
@@ -56,6 +56,6 @@
   },
   "engines": {
     "node": ">= 14",
-    "yarn": ">= 1"
+    "npm": ">= 1"
   }
 }
