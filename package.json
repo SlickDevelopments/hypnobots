@@ -51,7 +51,7 @@
     "jest-environment-node": "29.1.2",
     "nock": "13.2.9",
     "nodemon": "2.0.22",
-    "smee-client": "1.2.3",
+    "smee-client": "1.2.5",
     "standard-version": "9.5.0"
   },
   "engines": {
