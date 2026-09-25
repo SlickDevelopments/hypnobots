@@ -23,8 +23,8 @@
     "test": "./node_modules/.bin/jest"
   },
   "dependencies": {
-    "@commitlint/config-conventional": "17.1.0",
-    "@commitlint/core": "17.1.2",
+    "@commitlint/config-conventional": "17.8.1",
+    "@commitlint/core": "17.8.1",
     "@poool/junipero-utils": "2.0.0",
     "conventional-changelog-conventionalcommits": "5.0.0",
     "dotenv": "16.0.3",
